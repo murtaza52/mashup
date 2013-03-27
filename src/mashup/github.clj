@@ -1,3 +1,6 @@
+;; ### Github Service
+;; The below ns implements the service protocol for the github service.
+
 (ns mashup.github
   (:use [mashup.service-proto]
         [midje.sweet :only [facts fact anything]]
@@ -5,15 +8,17 @@
         [clojure.set :only [difference]])
   (:require [tentacles.events :as ev]
             [clj-time.format :as time]
-            [mashup.config :as c]))
+            [mashup.config :as c]
+            [mashup.twitter :as tw]))
 
-(defn parse-date [date-string]
-  (time/parse (time/formatters :date-time-no-ms) date-string))
+(def gt-date (tw/parse-date :date-time-no-ms))
 
 (fact "Parsing the date received from github"
       (parse-date "2013-02-20T17:24:33Z") => (date-time 2013 02 20 17 24 33))
 
-(defn gt-fetch [user page]
+(defn gt-fetch
+  "Fetches the user's events based on the user-name and page number (used for paginating through the events)"
+  [user page]
   (ev/performed-events user {:page page}))
 
 (defn gt-parse [events]
@@ -25,7 +30,7 @@
        events))
 
 (facts "Fetching and parsing of github events"
-       (let [events (gt-fetch c/github-user-name 1)]
+       (let [ev ents (gt-fetch c/github-user-name 1)]
          (fact "The events fetched are a vector of maps"
                events => #(and (vector? %) (map? (first %))))
          (fact "Each event has the following keys"
@@ -38,6 +43,8 @@
                                        (empty? (difference #{:source :type :repo :time} (-> parsed-events first keys set))))))
          (fact "Each parsed event has a time of type org.joda.time.DateTime"
                (-> (gt-parse events) first) => #(-> % :time type (= org.joda.time.DateTime)))))
+
+;; The github serice object
 
 (def github
   (reify

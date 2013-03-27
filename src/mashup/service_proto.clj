@@ -1,3 +1,8 @@
+;; ### Service Protocol
+;; The protocol defines two methods -
+;; 1) fetch for fetching of the data.
+;; 2) parse for parsing of the fetched data.
+
 (ns mashup.service-proto)
 
 (defprotocol Service

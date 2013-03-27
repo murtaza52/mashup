@@ -1,3 +1,8 @@
+;; The code in this ns retrieves the data in parallel for both the
+;; services - github and twitter.
+;; The data is then processed to include date for each item in three
+;; formats - day, month and year.
+
 (ns mashup.mashit
   (:use [mashup.github :only [github]]
         [mashup.twitter :only [twitter]]
@@ -8,9 +13,17 @@
   (:require [mashup.config :as c]
             [mashup.service-proto :as p]))
 
+;; The objects of the Service protocol
 (def services [twitter github])
 
-(defn get-data []
+;; ### Data Retrieval
+;; A future is used to retrieve and parse the data in parallel for both
+;; the services. The resulting data is then derefernced and
+;; concatenated.
+
+(defn get-data
+  "Retrieve and parse the data in parallel using a future"
+  []
   (->>
    (map #(future
             (->> (p/fetch %)
@@ -19,13 +32,28 @@
    (map deref)
    (apply concat)))
 
-(def date-fns {:day [day month year] :month [month year] :year [year]})
+;; ### Date Pocessing
+;; The functions below deal with the processing of the date for each
+;; item.
+
+;; Functions to be applied to create a string representation of the date.
+
+(def to-string-date-fns {:day [month day year] :month [month year] :year [year]})
+
+;; Functions to be applied to floor the date
+
+(def floor-date-fns {:day [day month year] :month [month year] :year [year]})
+
+;; The date types for which a floored string representation of the date
+;; will be created.
 
 (def dt-types [:day :month :year])
 
+
 (defn floor-date
+  "Floors the given date based on the date type."
   [dt-type dt]
-  (->> (dt-type date-fns)
+  (->> (dt-type floor-date-fns)
        (reverse)
        (map #(% dt))
        (apply date-time)))
@@ -39,8 +67,9 @@
              (floor-date :day (date-time 2013 5 12 23 13)) => (date-time 2013 5 12)))
 
 (defn get-date-string
+  "Creates a string representation of the date based on the given date and date type."
   [dt-type dt]
-  (let [fns (dt-type date-fns)]
+  (let [fns (dt-type to-string-date-fns)]
     (->>
      (map #(%1 dt) fns)
      (interpose "-")
@@ -52,9 +81,10 @@
        (fact "Returns a date string for the month"
              (get-date-string :month (date-time 2013 5 12)) => "5-2013")
        (fact "Returns a date string for the day"
-             (get-date-string :day (date-time 2013 5 12)) => "12-5-2013"))
+             (get-date-string :day (date-time 2013 5 12)) => "5-12-2013"))
 
-(defn get-dates-by-type
+(defn floor-and-string-by-type
+  "Floor the given date and return its string representation"
   [dt-type date]
   (->>
    date
@@ -74,6 +104,7 @@
               (-> v vals first type) => java.lang.String)))
 
 (defn add-date-for-types
+  "assoc a string representation of date for each date type with the item."
   [{:keys [time] :as item}]
   (->>
    (map #(get-dates-by-type % time) dt-types)
@@ -82,14 +113,11 @@
 
 (fact "Given a map with a time key, it returns back a map with dates for all the keys."
       (-> {:time (date-time 2012 7 26 21 21 45)} add-date-for-types keys) => #(empty?
-                                                                         (difference (set dt-types) (set %))))
+                                                                               (difference (set dt-types) (set %))))
 
 (defn fetch-it!
   []
   (->> (get-data) (map add-date-for-types)))
-
-(fetch-it!)
-
 
 
 

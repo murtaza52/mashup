@@ -9,13 +9,16 @@
             [mashup.config :as c]
             [mashup.service-proto :as proto]))
 
-(defn parse-date [date-string]
-  (time/parse (time/formatter "E MMM dd HH:mm:ss Z YYYY") date-string))
+(defn parse-date
+  "Returns a date parser based on the formatter"
+  [formatter]
+  (fn [date-string]
+    (time/parse (time/formatter "E MMM dd HH:mm:ss Z YYYY") date-string)))
+
+(def tw-date (parse-date "E MMM dd HH:mm:ss Z YYYY"))
 
 (fact "Able to parse the date received from twitter"
-      (parse-date "Mon Feb 25 02:42:27 +0000 2013") => (date-time 2013 02 25 02 42 27))
-
-(type (parse-date "Mon Feb 25 02:42:27 +0000 2013"))
+      (tw-date "Mon Feb 25 02:42:27 +0000 2013") => (date-time 2013 02 25 02 42 27))
 
 (defn make-creds
   []
@@ -34,7 +37,7 @@
   (map (fn[tweet]
          {:source :twitter
           :text (:text tweet)
-          :time (parse-date (:created_at tweet))})
+          :time (tw-date (:created_at tweet))})
        (:body tweets)))
 
 (facts "Retreiving and parsing of tweets"
@@ -57,18 +60,13 @@
                (tw-parse tweets) => (fn [parsed-tweets]
                                       (-> parsed-tweets first :time type (= org.joda.time.DateTime))))))
 
+;; The twitter service object
+
 (def twitter
   (reify
     proto/Service
     (fetch [this] (-> (make-creds) tw-fetch))
     (parse [this data] (tw-parse data))))
-
-;; (facts "The twitter protocol works"
-;;        (fact "Fetches the tweets"
-;;              (proto/fetch twitter) => anything)
-;;        (fact "Parses the tweets"
-;;              (proto/parse twitter (proto/fetch twitter)) => anything))
-
 
 
 

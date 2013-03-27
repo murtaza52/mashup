@@ -34312,10 +34312,10 @@ mashup.core.app_state = cljs.core.atom.call(null, cljs.core.ObjMap.fromObject(["
 mashup.core.fetch_data = function fetch_data(dt_type) {
   return shoreleave.remotes.http_rpc.remote_callback.call(null, "\ufdd0'fetch-data", cljs.core.PersistentVector.fromArray([dt_type], true), function(data) {
     mashup.utils.log.call(null, "data-received", data);
-    return cljs.core.swap_BANG_.call(null, mashup.core.app_state, function(p__7587) {
-      var map__7588 = p__7587;
-      var map__7588__$1 = cljs.core.seq_QMARK_.call(null, map__7588) ? cljs.core.apply.call(null, cljs.core.hash_map, map__7588) : map__7588;
-      var tw_uname = cljs.core._lookup.call(null, map__7588__$1, "\ufdd0'tw-uname", null);
+    return cljs.core.swap_BANG_.call(null, mashup.core.app_state, function(p__4535) {
+      var map__4536 = p__4535;
+      var map__4536__$1 = cljs.core.seq_QMARK_.call(null, map__4536) ? cljs.core.apply.call(null, cljs.core.hash_map, map__4536) : map__4536;
+      var tw_uname = cljs.core._lookup.call(null, map__4536__$1, "\ufdd0'tw-uname", null);
       return cljs.core.ObjMap.fromObject(["\ufdd0'data", "\ufdd0'tw-uname"], {"\ufdd0'data":data, "\ufdd0'tw-uname":tw_uname})
     })
   })
@@ -34323,10 +34323,10 @@ mashup.core.fetch_data = function fetch_data(dt_type) {
 mashup.core.get_twitter_uname = function get_twitter_uname() {
   return shoreleave.remotes.http_rpc.remote_callback.call(null, "\ufdd0'get-twitter-uname", cljs.core.PersistentVector.EMPTY, function(uname) {
     mashup.utils.log.call(null, "name-received", uname);
-    return cljs.core.swap_BANG_.call(null, mashup.core.app_state, function(p__7591) {
-      var map__7592 = p__7591;
-      var map__7592__$1 = cljs.core.seq_QMARK_.call(null, map__7592) ? cljs.core.apply.call(null, cljs.core.hash_map, map__7592) : map__7592;
-      var data = cljs.core._lookup.call(null, map__7592__$1, "\ufdd0'data", null);
+    return cljs.core.swap_BANG_.call(null, mashup.core.app_state, function(p__4539) {
+      var map__4540 = p__4539;
+      var map__4540__$1 = cljs.core.seq_QMARK_.call(null, map__4540) ? cljs.core.apply.call(null, cljs.core.hash_map, map__4540) : map__4540;
+      var data = cljs.core._lookup.call(null, map__4540__$1, "\ufdd0'data", null);
       return cljs.core.ObjMap.fromObject(["\ufdd0'data", "\ufdd0'tw-uname"], {"\ufdd0'data":data, "\ufdd0'tw-uname":uname})
     })
   })
@@ -34334,16 +34334,16 @@ mashup.core.get_twitter_uname = function get_twitter_uname() {
 mashup.core.dt_types = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Day", "\ufdd0'dt-type", "\ufdd0'day"], true), cljs.core.PersistentVector.fromArray(["Month", "\ufdd0'dt-type", "\ufdd0'month"], true), cljs.core.PersistentVector.fromArray(["Year", "\ufdd0'dt-type", "\ufdd0'year"], true)], true);
 mashup.core.create_buttons = function create_buttons(btns) {
   return cljs.core.PersistentVector.fromArray(["\ufdd0'div.btn-group.bs-docs-sidenav.affix.btn-top-margin", cljs.core.ObjMap.fromObject(["\ufdd0'data-toggle"], {"\ufdd0'data-toggle":"buttons-radio"}), function() {
-    var iter__2540__auto__ = function iter__7597(s__7598) {
+    var iter__2540__auto__ = function iter__4545(s__4546) {
       return new cljs.core.LazySeq(null, false, function() {
-        var s__7598__$1 = s__7598;
+        var s__4546__$1 = s__4546;
         while(true) {
-          if(cljs.core.seq.call(null, s__7598__$1)) {
-            var vec__7600 = cljs.core.first.call(null, s__7598__$1);
-            var text = cljs.core.nth.call(null, vec__7600, 0, null);
-            var mouse = cljs.core.nth.call(null, vec__7600, 1, null);
-            var group_by = cljs.core.nth.call(null, vec__7600, 2, null);
-            return cljs.core.cons.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'button.btn.btn-primary", cljs.core.ObjMap.fromObject(["\ufdd0'type", "\ufdd0'mouse", "\ufdd0'group-by", "\ufdd0'id"], {"\ufdd0'type":"\ufdd0'button", "\ufdd0'mouse":mouse, "\ufdd0'group-by":group_by, "\ufdd0'id":text}), text], true), iter__7597.call(null, cljs.core.rest.call(null, s__7598__$1)))
+          if(cljs.core.seq.call(null, s__4546__$1)) {
+            var vec__4548 = cljs.core.first.call(null, s__4546__$1);
+            var text = cljs.core.nth.call(null, vec__4548, 0, null);
+            var mouse = cljs.core.nth.call(null, vec__4548, 1, null);
+            var group_by = cljs.core.nth.call(null, vec__4548, 2, null);
+            return cljs.core.cons.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'button.btn.btn-primary", cljs.core.ObjMap.fromObject(["\ufdd0'type", "\ufdd0'mouse", "\ufdd0'group-by", "\ufdd0'id"], {"\ufdd0'type":"\ufdd0'button", "\ufdd0'mouse":mouse, "\ufdd0'group-by":group_by, "\ufdd0'id":text}), text], true), iter__4545.call(null, cljs.core.rest.call(null, s__4546__$1)))
           }else {
             return null
           }
@@ -34368,36 +34368,36 @@ mashup.core.github_div = function github_div(item) {
 mashup.core.dt_title = function dt_title(text) {
   return cljs.core.PersistentVector.fromArray(["\ufdd0'div.row-fluid", cljs.core.PersistentVector.fromArray(["\ufdd0'div.span12", cljs.core.PersistentVector.fromArray(["\ufdd0'h2.title-color", text], true)], true)], true)
 };
-mashup.core.render_all = function render_all(p__7601) {
-  var map__7615 = p__7601;
-  var map__7615__$1 = cljs.core.seq_QMARK_.call(null, map__7615) ? cljs.core.apply.call(null, cljs.core.hash_map, map__7615) : map__7615;
-  var tw_uname = cljs.core._lookup.call(null, map__7615__$1, "\ufdd0'tw-uname", null);
-  var data = cljs.core._lookup.call(null, map__7615__$1, "\ufdd0'data", null);
+mashup.core.render_all = function render_all(p__4549) {
+  var map__4563 = p__4549;
+  var map__4563__$1 = cljs.core.seq_QMARK_.call(null, map__4563) ? cljs.core.apply.call(null, cljs.core.hash_map, map__4563) : map__4563;
+  var tw_uname = cljs.core._lookup.call(null, map__4563__$1, "\ufdd0'tw-uname", null);
+  var data = cljs.core._lookup.call(null, map__4563__$1, "\ufdd0'data", null);
   return cljs.core.PersistentVector.fromArray(["\ufdd0'div.container-fluid", cljs.core.PersistentVector.fromArray(["\ufdd0'div.row-fluid", cljs.core.PersistentVector.fromArray(["\ufdd0'div.span2", mashup.core.create_buttons.call(null, mashup.core.dt_types)], true), cljs.core.PersistentVector.fromArray(["\ufdd0'div.span10", mashup.core.heading.call(null, "Mashup Generator"), data == null ? mashup.core.spinner : function() {
-    var iter__2540__auto__ = function iter__7616(s__7617) {
+    var iter__2540__auto__ = function iter__4564(s__4565) {
       return new cljs.core.LazySeq(null, false, function() {
-        var s__7617__$1 = s__7617;
+        var s__4565__$1 = s__4565;
         while(true) {
-          if(cljs.core.seq.call(null, s__7617__$1)) {
-            var vec__7623 = cljs.core.first.call(null, s__7617__$1);
-            var dt_group = cljs.core.nth.call(null, vec__7623, 0, null);
-            var items = cljs.core.nth.call(null, vec__7623, 1, null);
+          if(cljs.core.seq.call(null, s__4565__$1)) {
+            var vec__4571 = cljs.core.first.call(null, s__4565__$1);
+            var dt_group = cljs.core.nth.call(null, vec__4571, 0, null);
+            var items = cljs.core.nth.call(null, vec__4571, 1, null);
             return cljs.core.cons.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'div", mashup.core.dt_title.call(null, dt_group), function() {
-              var iter__2540__auto__ = function(vec__7623, dt_group, items) {
-                return function iter__7624(s__7625) {
-                  return new cljs.core.LazySeq(null, false, function(vec__7623, dt_group, items) {
+              var iter__2540__auto__ = function(vec__4571, dt_group, items) {
+                return function iter__4572(s__4573) {
+                  return new cljs.core.LazySeq(null, false, function(vec__4571, dt_group, items) {
                     return function() {
-                      var s__7625__$1 = s__7625;
+                      var s__4573__$1 = s__4573;
                       while(true) {
-                        if(cljs.core.seq.call(null, s__7625__$1)) {
-                          var item = cljs.core.first.call(null, s__7625__$1);
+                        if(cljs.core.seq.call(null, s__4573__$1)) {
+                          var item = cljs.core.first.call(null, s__4573__$1);
                           var source = item.call(null, "\ufdd0'source");
                           return cljs.core.cons.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'div.row-fluid", cljs.core.PersistentVector.fromArray(["\ufdd0'div.span12", function() {
-                            var G__7627 = source;
-                            if(cljs.core._EQ_.call(null, "\ufdd0'github", G__7627)) {
+                            var G__4575 = source;
+                            if(cljs.core._EQ_.call(null, "\ufdd0'github", G__4575)) {
                               return mashup.core.github_div.call(null, item)
                             }else {
-                              if(cljs.core._EQ_.call(null, "\ufdd0'twitter", G__7627)) {
+                              if(cljs.core._EQ_.call(null, "\ufdd0'twitter", G__4575)) {
                                 return mashup.core.twitter_div.call(null, item)
                               }else {
                                 if("\ufdd0'else") {
@@ -34407,18 +34407,18 @@ mashup.core.render_all = function render_all(p__7601) {
                                 }
                               }
                             }
-                          }()], true)], true), iter__7624.call(null, cljs.core.rest.call(null, s__7625__$1)))
+                          }()], true)], true), iter__4572.call(null, cljs.core.rest.call(null, s__4573__$1)))
                         }else {
                           return null
                         }
                         break
                       }
                     }
-                  }(vec__7623, dt_group, items), null)
+                  }(vec__4571, dt_group, items), null)
                 }
-              }(vec__7623, dt_group, items);
+              }(vec__4571, dt_group, items);
               return iter__2540__auto__.call(null, items)
-            }()], true), iter__7616.call(null, cljs.core.rest.call(null, s__7617__$1)))
+            }()], true), iter__4564.call(null, cljs.core.rest.call(null, s__4565__$1)))
           }else {
             return null
           }

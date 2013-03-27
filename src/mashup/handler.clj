@@ -1,3 +1,6 @@
+;; ### Ring Hadlers
+;; This ns defines the ring handlers.
+
 (ns mashup.handler
   (:use [compojure.core :only [GET ANY defroutes]]
         [ring.mock.request :only [request]]
@@ -8,7 +11,14 @@
             [compojure.route :as route]
             [shoreleave.middleware.rpc :as rpc]))
 
-(defn index []
+(defn req
+  "Utility function for creating a mock request"
+  [[verb url & params]]
+  (app (request verb url (first params))))
+
+(defn index
+  "The index page."
+  []
   (file-response "templates/index.html" {:root "resources/public"}))
 
 (defroutes app-routes
@@ -19,31 +29,16 @@
              (rpc/wrap-rpc "/_shoreleave")
              handler/site))
 
-(defn req
-  [[verb url & params]]
-  (app (request verb url (first params))))
-
-(defn apply-fns
-  [fns]
-  (fn [v0]
-    (reduce (fn [v f] (f v)) v0 fns)))
-
-(comment #(-> % :status (= 200)))
-
 (facts "Checking Routes"
        (fact "Compojure Routes : Index Page"
-             (req [:get "/"]) => (apply-fns [:status #(= % 200)])
-             (req [:get "/"]) => (apply-fns [:body type #(= % java.io.File)]))
+             (req [:get "/"]) => (comp (partial = 200) :status)
+             (req [:get "/"]) => (comp (partial = java.io.File) type :body))
        (fact "Shoreleave Route : Checking if shoreleave url exists"
-             (req [:post "/_shoreleave"]) => (apply-fns [:body #(= % "Remote not found.")]))
+             (req [:post "/_shoreleave"]) => (comp (partial = "Remote not found.") :body))
        (fact "Shoreleave Route : Testing the fetch-data remote"
-             (req [:post "/_shoreleave" {:params [:month] :remote "fetch-data"}]) => (apply-fns [:status #(= % 202)]))
+             (req [:post "/_shoreleave" {:params [:month] :remote "fetch-data"}]) => (comp (partial = 202) :status))
        (fact "Shoreleave Route : Testing the get-twitter-uname remote"
-             (req [:post "/_shoreleave" {:remote "get-twitter-uname"}]) => (apply-fns [:status #(= % 202)])))
-
-
-
-
+             (req [:post "/_shoreleave" {:remote "get-twitter-uname"}]) => (comp (partial = 202) :status)))
 
 
 
