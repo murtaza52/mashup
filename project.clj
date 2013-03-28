@@ -11,9 +11,7 @@
                  [ring/ring-core "1.2.0-beta1"]
                  [twitter-api "0.7.2" :exclusions [[org.apache.httpcomponents/httpclient] [org.apache.httpcomponents/httpmime]]]
                  [tentacles "0.2.4" :exclusions [[cheshire] clj-http]]
-                 [core.logic "0.6.1-SNAPSHOT"]
                  [webfui "0.2.1"]
-                 [prismatic/dommy "0.0.2"]
                  [clj-time "0.4.4"]
                  [me.shenfeng/mustache "1.1"]
                  [shoreleave "0.3.0"]
@@ -31,21 +29,17 @@
   :repl-options {:init-ns mashup.handler
                  :init (do
                          (use 'ring.util.serve)
-                         (serve app)
-                         (use 'ring.mock.request))
-                 }
+                         (serve app))}
   :profiles {:dev {:dependencies [[ring-mock "0.1.3"]
                                   [ring-serve "0.1.2"]
                                   [midje "1.5.0" :exclusions [joda-time]]
                                   [marginalia "0.7.1" :exclusions [org.clojure/tools.namespace]]]}}
-  :cljsbuild {
-              :repl-listen-port 9000
-              :builds [{
-                                        ; The path to the top-level ClojureScript source directory:
-                        :source-paths ["src-cljs"]
-                                        ; The standard ClojureScript compiler options:
-                                        ; (See the ClojureScript compiler documentation for details.)
-                        :compiler {
-                                   :output-to "resources/public/js/cljs.js"  ; default: target/cljsbuild-main.js
-                                   :optimizations :whitespace
-                                   :pretty-print true}}]})
+  :cljsbuild {:crossovers [mashup.crossover],
+              :builds
+              [{:source-paths ["src-cljs"],
+                :crossover-path "src-cljs",
+                :compiler
+                {:pretty-print true,
+                 :output-to "resources/public/js/cljs.js",
+                 :optimizations :whitespace}}],
+              :repl-listen-port 9000})
