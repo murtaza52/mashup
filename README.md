@@ -13,10 +13,10 @@ data is sent across the wire, while the html is generated on the client.
 
 To run the application, please do the following -
 
-1) Clone the repository.
-2) Run lein deps.
-3) Run lein cljsbuild once.
-4) Run lein repl.
+1. Clone the repository.
+2. Run lein deps.
+3. Run lein cljsbuild once.
+4. Run lein repl.
 
 (leiningen 2 is assumed to be the default lein.)
 
@@ -67,14 +67,22 @@ to the authors of the following libs-
 
 Open Source Rocks and Clojure Rocks Open Source !!!
 
+## Acknowledgements
+
+I did ask a lot of questions on stackoverflow, and am thankful to the
+numerous authors who shared their knowledge with me !
+
+Also a big thanks to the guys at
+
 ## Known Bugs
 
 Yes even shiny new porjects have them -
 
-1) The day button should be pressed when the page loads. Currently
+1. The day button should be pressed when the page loads. Currently
 unable to execute the js needed for this.
-2) The sorting doesnt work. Unable to trace the reason at this point :(
+2. The sorting doesnt work. Unable to trace the reason at this point :(
 
 ## License
 
 Copyright © 2013 Murtaza Husain
+
