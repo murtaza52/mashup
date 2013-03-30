@@ -3,17 +3,11 @@
         [twitter.api.restful :only [statuses-user-timeline]]
         [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
-        [clojure.set :only [difference]])
+        [clojure.set :only [difference]]
+        [mashup.utils :only [parse-date]])
   (:require [oauth.client :as oauth]
-            [clj-time.format :as time]
             [mashup.config :as c]
             [mashup.service-proto :as proto]))
-
-(defn parse-date
-  "Returns a date parser based on the formatter"
-  [formatter]
-  (fn [date-string]
-    (time/parse (time/formatter "E MMM dd HH:mm:ss Z YYYY") date-string)))
 
 (def tw-date (parse-date "E MMM dd HH:mm:ss Z YYYY"))
 

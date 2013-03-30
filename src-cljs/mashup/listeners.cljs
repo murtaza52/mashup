@@ -1,5 +1,6 @@
 (ns mashup.listeners
-  (:use [webfui.utilities :only [get-attribute clicked]])
+  (:use [webfui.utilities :only [get-attribute clicked]]
+        [mashup.remote :only [fetch-data]])
   (:use-macros [webfui.framework.macros :only [add-mouse-watch]]))
 
 ;; ### The add-mouse-watch macro
@@ -27,8 +28,18 @@
 ;; The function below returns {:data nil}, this will cause the dom to
 ;; display a spinner.
 
-(add-mouse-watch :change-grouping [state first-element last-element]
-                 (when (clicked first-element last-element)
-                   (-> (get-attribute first-element :dt-type)
-                       (fetch-data))
-                   {:data nil}))
+;; (add-mouse-watch :change-grouping [state first-element last-element]
+;;                  (js/alert "Hello"))
+
+;; (when (clicked first-element last-element)
+;;                    (-> (get-attribute first-element :dt-type)
+;;                        (fetch-data))
+;;                    {:data nil})
+
+(defn add-listener
+  []
+  (add-mouse-watch :change-grouping [state first-element last-element]
+                   (when (clicked first-element last-element)
+                     (-> (get-attribute first-element :dt-type)
+                         (fetch-data))
+                     {:data nil})))

@@ -6,14 +6,12 @@
                  [compojure "1.1.5" :exclusions [[commons-io] [ring/ring-core] org.clojure/tools.macro]]
                  [clj-oauth "1.4.0"]
                  [org.apache.httpcomponents/httpclient "4.2.3"]
-                 [enlive "1.0.1" :exclusions [org.clojure/clojure]]
                  [org.thnetos/cd-client "0.3.4" :exclusions [[org.clojure/clojure] clj-http cheshire commons-codec]]
                  [ring/ring-core "1.2.0-beta1"]
                  [twitter-api "0.7.2" :exclusions [[org.apache.httpcomponents/httpclient] [org.apache.httpcomponents/httpmime]]]
                  [tentacles "0.2.4" :exclusions [[cheshire] clj-http]]
                  [webfui "0.2.1"]
                  [clj-time "0.4.4"]
-                 [me.shenfeng/mustache "1.1"]
                  [shoreleave "0.3.0"]
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
                  [shoreleave/shoreleave-remote "0.3.0"]
@@ -22,9 +20,7 @@
   :plugins [[lein-ring "0.8.3"]
             [lein-cljsbuild "0.3.0"]
             [lein-midje "3.0.0"]
-            [lein-marginalia "0.7.1"]
-            [lein-pallet-fuz "0.1.1"]
-            [org.cloudhoist/pallet-lein "0.5.1"]]
+            [lein-marginalia "0.7.1"]]
   :ring {:handler mashup.handler/app}
   :repl-options {:init-ns mashup.handler
                  :init (do
@@ -34,10 +30,9 @@
                                   [ring-serve "0.1.2"]
                                   [midje "1.5.0" :exclusions [joda-time]]
                                   [marginalia "0.7.1" :exclusions [org.clojure/tools.namespace]]]}}
-  :cljsbuild {:crossovers [mashup.crossover],
+  :cljsbuild {
               :builds
               [{:source-paths ["src-cljs"],
-                :crossover-path "src-cljs",
                 :compiler
                 {:pretty-print true,
                  :output-to "resources/public/js/cljs.js",

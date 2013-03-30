@@ -13,12 +13,12 @@
   (:require [mashup.config :as c]
             [mashup.service-proto :as p]))
 
-;; The objects of the Service protocol
+;; The objects of the Service protocol.
 (def services [twitter github])
 
 ;; ### Data Retrieval
 ;; A future is used to retrieve and parse the data in parallel for both
-;; the services. The resulting data is then derefernced and
+;; the services. The resulting data is then dereferenced and
 ;; concatenated.
 
 (defn get-data
@@ -40,7 +40,7 @@
 
 (def to-string-date-fns {:day [month day year] :month [month year] :year [year]})
 
-;; Functions to be applied to floor the date
+;; Functions to be applied to floor the date.
 
 (def floor-date-fns {:day [day month year] :month [month year] :year [year]})
 
@@ -93,7 +93,7 @@
    (hash-map dt-type)))
 
 (facts "Given a date and type floor it and return its string represetation as a map"
-      (let [v (get-dates-by-type :month (date-time 2013 12 5 6 12 21))]
+      (let [v (floor-and-string-by-type :month (date-time 2013 12 5 6 12 21))]
         (fact "The return value is a map"
               v => map?)
         (fact "It has a count of one"
@@ -107,14 +107,14 @@
   "assoc a string representation of date for each date type with the item."
   [{:keys [time] :as item}]
   (->>
-   (map #(get-dates-by-type % time) dt-types)
+   (map #(floor-and-string-by-type % time) dt-types)
    (reduce merge)
    (merge item)))
 
 (fact "Given a map with a time key, it returns back a map with dates for all the keys."
       (-> {:time (date-time 2012 7 26 21 21 45)} add-date-for-types keys) => #(empty?
                                                                                (difference (set dt-types) (set %))))
-
+m
 (defn fetch-it!
   []
   (->> (get-data) (map add-date-for-types)))

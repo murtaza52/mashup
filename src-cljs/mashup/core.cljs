@@ -1,9 +1,10 @@
 (ns mashup.core
   (:use [webfui.framework :only [launch-app]]
         [mashup.utils :only [log set-repl]]
-        [mashup.crossover.dom :only [render-all]]
-        [mashup.crossover.state :only [app-state]]
-        [mashup.remote :only [fetch-data get-twitter-uname]])
+        [mashup.dom :only [render-all]]
+        [mashup.state :only [app-state]]
+        [mashup.remote :only [fetch-data get-twitter-uname]]
+        [mashup.listeners :only [add-listener]])
   (:require [domina :as dom]))
 
 ;; Calling the utility function to set the repl.
@@ -29,6 +30,7 @@
 (launch-app app-state render-all)
 
 ;; calls the javascript function to set the button state.
-(js/setButton)
+;; (js/setButton)
 
-
+;; Add the listener for mouse clicks, for the Day, Month, Year buttons.
+(add-listener)

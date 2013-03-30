@@ -108,6 +108,22 @@
                                                                                   "2-25-2013" [{:time (date-time 2013 2 25 2 38 15)}]
                                                                                   "2-8-2013" [{:time (date-time 2013 2 8 12 44 47)}]})
 
+(defn remove-date
+  [data]
+  (->>
+   (map (fn [[k v]]
+         (let [new-v (mapv dissoc-date-time v)]
+           {k new-v}))
+        data)
+   (into {})))
+
+(fact "Removes all date-time instances from the following data structure {k [{v}]}"
+      (remove-date {:a [{:time (date-time 2012) :e 2} {:f 3}]}) => (fn [data]
+                                                                     (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
+                                                                             (-> data vals first first))))
+
+(pprint (remove-date (fetch-data :month)))
+
 (defremote fetch-data
   [dt-type]
   (->
@@ -119,7 +135,7 @@
 (facts "Checking the returned data"
        (fact "The data is free of any instance of org.joda.time.DateTime"
              (fetch-data :month) => (fn [data]
-                                      (every? #(not (instance? org.joda.time.DateTime %))
+                                      (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
                                               (-> data vals first first))))
        (fact "The returned data is grouped"
              (fetch-data :day) => #(-> % keys empty? not)))
