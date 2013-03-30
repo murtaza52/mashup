@@ -35,7 +35,10 @@ section in the documentation.
 ## Documentation
 
 The documentation is done using the excellent marginalia lib. The
-generated documentation is avalaible on the [project page] (http://murtaza52.github.com/mashup).
+generated documentation is avalaible on the [project page]
+(http://murtaza52.github.com/mashup).
+
+Please visit the documentation (http://murtaza52.github.com/mashup).
 
 ## Testing
 
