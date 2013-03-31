@@ -1,7 +1,6 @@
-
-(defproject mashup "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+(defproject mashup "0.1.0"
+  :description "Mashup Generator"
+  :url "http://github.com/murtaza52/mashup"
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [compojure "1.1.5" :exclusions [[commons-io] [ring/ring-core] org.clojure/tools.macro]]
                  [clj-oauth "1.4.0"]
