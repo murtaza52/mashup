@@ -5,8 +5,7 @@
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
         [mashup.utils :only [parse-date]]
-        ;;[mashup.services :only [add-service]]
-        )
+        [mashup.services :only [add-service]])
   (:require [oauth.client :as oauth]
             [mashup.config :as c]
             [mashup.service-proto :as proto]))
@@ -55,7 +54,7 @@
                (tw-parse tweets) => (fn [parsed-tweets]
                                       (-> parsed-tweets first :time type (= org.joda.time.DateTime))))))
 
-;;(add-service [tw-config [make-creds tw-fetch tw-parse]])
+(add-service [tw-config [make-creds tw-fetch tw-parse]])
 
 ;; The twitter service object
 
