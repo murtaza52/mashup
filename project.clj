@@ -17,8 +17,8 @@
                  [shoreleave/shoreleave-remote "0.3.0"]
                  [domina "1.0.1"]
                  [org.clojure/google-closure-library-third-party "0.0-2029"]]
-  :plugins [[lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
-            [lein-cljsbuild "0.3.0" :exclusions [org.clojure/clojure]]
+  :plugins [[lein-ring "0.8.3"]
+            [lein-cljsbuild "0.3.0"]
             [lein-midje "3.0.0"]
             [lein-marginalia "0.7.1"]]
   :ring {:handler mashup.handler/app}
@@ -27,7 +27,7 @@
                          (use 'ring.util.serve)
                          (serve app))}
   :profiles {:dev {:dependencies [[ring-mock "0.1.3"]
-                                  [ring-serve "0.1.2" :exclusions [[ring/ring-devel] [ring/ring-jetty-adapter]]]
+                                  [ring-serve "0.1.2"]
                                   [midje "1.5.0" :exclusions [joda-time]]
                                   [marginalia "0.7.1" :exclusions [org.clojure/tools.namespace]]]}}
   :cljsbuild {
