@@ -114,6 +114,7 @@
 (fact "Given a map with a time key, it returns back a map with dates for all the keys."
       (-> {:time (date-time 2012 7 26 21 21 45)} add-date-for-types keys) => #(empty?
                                                                                (difference (set dt-types) (set %))))
+
 ;; #### Fetch the data
 ;; The data is fetched and stored in an atom. This is to prevent multiple
 ;; calls to the server when the data is requested multiple times by the
@@ -129,3 +130,8 @@
          (map add-date-for-types)
          (reset! retrieved-data)))
   @retrieved-data)
+
+
+;; (defn fetch-it!
+;;   []
+;;   (->> (get-data) (map add-date-for-types)))

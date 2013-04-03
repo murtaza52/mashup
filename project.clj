@@ -15,7 +15,8 @@
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
                  [shoreleave/shoreleave-remote "0.3.0"]
                  [domina "1.0.1"]
-                 [org.clojure/google-closure-library-third-party "0.0-2029"]]
+                 [org.clojure/google-closure-library-third-party "0.0-2029"]
+                 [org.slf4j/slf4j-log4j12 "1.7.3"]]
   :plugins [[lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
             [lein-cljsbuild "0.3.0" :exclusions [org.clojure/clojure]]
             [lein-midje "3.0.0"]
@@ -26,7 +27,7 @@
                          (use 'ring.util.serve)
                          (serve app))}		;; serves the app when the repl starts.
   :profiles {:dev {:dependencies [[ring-mock "0.1.3"]
-                                  [ring-serve "0.1.2"]
+                                  [ring-serve "0.1.2" :exclusions [[ring/ring-devel] [ring/ring-jetty-adapter]]]
                                   [midje "1.5.0" :exclusions [joda-time]]
                                   [marginalia "0.7.1" :exclusions [org.clojure/tools.namespace]]]}}
   :cljsbuild {
