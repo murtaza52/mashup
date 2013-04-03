@@ -4,9 +4,7 @@
 ;; formats - day, month and year.
 
 (ns mashup.core
-  (:use [mashup.github :only [github]]
-        [mashup.twitter :only [twitter]]
-        [clojure.pprint :only [pprint]]
+  (:use [clojure.pprint :only [pprint]]
         [clj-time.core :only [date-time year month day hour minute sec milli]]
         [midje.sweet :only [facts fact]]
         [clojure.set :only [difference]]
