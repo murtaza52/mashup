@@ -7,7 +7,7 @@
 
 (ns mashup.remote
   (:use [shoreleave.middleware.rpc :only [defremote]]
-        [mashup.mashit :only [fetch-it!]]
+        [mashup.core :only [fetch-it!]]
         [midje.sweet :only [facts fact]]
         [clojure.set :only [subset? difference]]
         [clojure.string :only [split]]

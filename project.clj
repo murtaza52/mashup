@@ -16,8 +16,8 @@
                  [shoreleave/shoreleave-remote "0.3.0"]
                  [domina "1.0.1"]
                  [org.clojure/google-closure-library-third-party "0.0-2029"]]
-  :plugins [[lein-ring "0.8.3"]
-            [lein-cljsbuild "0.3.0"]
+  :plugins [[lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
+            [lein-cljsbuild "0.3.0" :exclusions [org.clojure/clojure]]
             [lein-midje "3.0.0"]
             [lein-marginalia "0.7.1"]]
   :ring {:handler mashup.handler/app}
