@@ -122,8 +122,6 @@
                                                                      (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
                                                                              (-> data vals first first))))
 
-(pprint (remove-date (fetch-data :month)))
-
 (defremote fetch-data
   [dt-type]
   (->

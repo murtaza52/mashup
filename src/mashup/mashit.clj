@@ -114,7 +114,7 @@
 (fact "Given a map with a time key, it returns back a map with dates for all the keys."
       (-> {:time (date-time 2012 7 26 21 21 45)} add-date-for-types keys) => #(empty?
                                                                                (difference (set dt-types) (set %))))
-m
+
 (defn fetch-it!
   []
   (->> (get-data) (map add-date-for-types)))
