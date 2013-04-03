@@ -3,34 +3,35 @@
 ;; The data is then processed to include date for each item in three
 ;; formats - day, month and year.
 
-(ns mashup.mashit
+(ns mashup.core
   (:use [mashup.github :only [github]]
         [mashup.twitter :only [twitter]]
         [clojure.pprint :only [pprint]]
         [clj-time.core :only [date-time year month day hour minute sec milli]]
         [midje.sweet :only [facts fact]]
-        [clojure.set :only [difference]])
+        [clojure.set :only [difference]]
+        [mashup.services :only [exec-services]])
   (:require [mashup.config :as c]
             [mashup.service-proto :as p]))
 
 ;; The objects of the Service protocol.
-(def services [twitter github])
+;;(def services [twitter github])
 
 ;; ### Data Retrieval
 ;; A future is used to retrieve and parse the data in parallel for both
 ;; the services. The resulting data is then dereferenced and
 ;; concatenated.
 
-(defn get-data
-  "Retrieve and parse the data in parallel using a future"
-  []
-  (->>
-   (map #(future
-            (->> (p/fetch %)
-                 (p/parse %)))
-        services)
-   (map deref)
-   (apply concat)))
+;; (defn get-data
+;;   "Retrieve and parse the data in parallel using a future"
+;;   []
+;;   (->>
+;;    (map #(future
+;;             (->> (p/fetch %)
+;;                  (p/parse %)))
+;;         services)
+;;    (map deref)
+;;    (apply concat)))
 
 ;; ### Date Pocessing
 ;; The functions below deal with the processing of the date for each
@@ -44,11 +45,9 @@
 
 (def floor-date-fns {:day [day month year] :month [month year] :year [year]})
 
-;; The date types for which a floored string representation of the date
-;; will be created.
+;; The date types which will be added to each item.
 
 (def dt-types [:day :month :year])
-
 
 (defn floor-date
   "Floors the given date based on the date type."
@@ -115,53 +114,23 @@
       (-> {:time (date-time 2012 7 26 21 21 45)} add-date-for-types keys) => #(empty?
                                                                                (difference (set dt-types) (set %))))
 
+;; #### Fetch the data
+;; The data is fetched and stored in an atom. This is to prevent multiple
+;; calls to the server when the data is requested multiple times by the
+;; client.
+
+(def retrieved-data (atom nil))
+
 (defn fetch-it!
-  []
-  (->> (get-data) (map add-date-for-types)))
+  [fetch-again?]
+  (when (or fetch-again?
+            (nil? @retrieved-data))
+    (->> (exec-services)
+         (map add-date-for-types)
+         (reset! retrieved-data)))
+  @retrieved-data)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+;; (defn fetch-it!
+;;   []
+;;   (->> (get-data) (map add-date-for-types)))

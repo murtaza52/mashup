@@ -7,7 +7,7 @@
 
 (ns mashup.remote
   (:use [shoreleave.middleware.rpc :only [defremote]]
-        [mashup.mashit :only [fetch-it!]]
+        [mashup.core :only [fetch-it!]]
         [midje.sweet :only [facts fact]]
         [clojure.set :only [subset? difference]]
         [clojure.string :only [split]]
@@ -17,12 +17,6 @@
         [clojure.pprint :only [pprint]])
   (:require [mashup.config :as config]))
 
-
-;; #### Fetch the data
-;; The data is fetched and stored in a var. This is to prevent multiple
-;; calls to the server when the data is requested multiple times by the
-;; client.
-(def data (fetch-it!))
 
 ;; ### Utility Functions
 ;; Functions for grouping, sorting and removing date instances from the data.
@@ -35,8 +29,8 @@
 
 ;; Test if the data is grouped correctly.
 (facts "Data is grouped by the given keys."
-       (let [grouped-data (group-data data :month)
-             months (map :month data)
+       (let [grouped-data (group-data (fetch-it! false) :month)
+             months (map :month (fetch-it! false))
              grouped-by-keys (keys grouped-data)]
          (fact "The grouping keys are a subset of the :month/:day keys in data"
                [months grouped-by-keys] => (fn [[s1 s2]]
@@ -125,7 +119,7 @@
 (defremote fetch-data
   [dt-type]
   (->
-   data
+   (fetch-it! false)
    (group-data dt-type)
    sort-map-by-date
    remove-date))

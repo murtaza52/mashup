@@ -21082,21 +21082,21 @@ cljs.core.UUID.prototype.toString = function() {
 };
 goog.provide("mashup.dom");
 goog.require("cljs.core");
-mashup.dom.dt_btns = cljs.core.mapv.call(null, function(p1__12676_SHARP_, p2__12677_SHARP_, p3__12678_SHARP_) {
-  return cljs.core.vector.call(null, p1__12676_SHARP_, p2__12677_SHARP_, p3__12678_SHARP_)
+mashup.dom.dt_btns = cljs.core.mapv.call(null, function(p1__3164_SHARP_, p2__3165_SHARP_, p3__3166_SHARP_) {
+  return cljs.core.vector.call(null, p1__3164_SHARP_, p2__3165_SHARP_, p3__3166_SHARP_)
 }, cljs.core.PersistentVector.fromArray(["Day", "Month", "Year"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'day", "\ufdd0'month", "\ufdd0'year"], true), cljs.core.repeat.call(null, "\ufdd0'change-grouping"));
 mashup.dom.create_buttons = function create_buttons(btns) {
   return cljs.core.PersistentVector.fromArray(["\ufdd0'div.btn-group.bs-docs-sidenav.affix.btn-top-margin", cljs.core.ObjMap.fromObject(["\ufdd0'data-toggle"], {"\ufdd0'data-toggle":"buttons-radio"}), function() {
-    var iter__2540__auto__ = function iter__12683(s__12684) {
+    var iter__2540__auto__ = function iter__3171(s__3172) {
       return new cljs.core.LazySeq(null, false, function() {
-        var s__12684__$1 = s__12684;
+        var s__3172__$1 = s__3172;
         while(true) {
-          if(cljs.core.seq.call(null, s__12684__$1)) {
-            var vec__12686 = cljs.core.first.call(null, s__12684__$1);
-            var text = cljs.core.nth.call(null, vec__12686, 0, null);
-            var dt_type = cljs.core.nth.call(null, vec__12686, 1, null);
-            var mouse = cljs.core.nth.call(null, vec__12686, 2, null);
-            return cljs.core.cons.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'button.btn.btn-primary", cljs.core.ObjMap.fromObject(["\ufdd0'type", "\ufdd0'mouse", "\ufdd0'dt-type", "\ufdd0'id"], {"\ufdd0'type":"\ufdd0'button", "\ufdd0'mouse":mouse, "\ufdd0'dt-type":dt_type, "\ufdd0'id":text}), text], true), iter__12683.call(null, cljs.core.rest.call(null, s__12684__$1)))
+          if(cljs.core.seq.call(null, s__3172__$1)) {
+            var vec__3174 = cljs.core.first.call(null, s__3172__$1);
+            var text = cljs.core.nth.call(null, vec__3174, 0, null);
+            var dt_type = cljs.core.nth.call(null, vec__3174, 1, null);
+            var mouse = cljs.core.nth.call(null, vec__3174, 2, null);
+            return cljs.core.cons.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'button.btn.btn-primary", cljs.core.ObjMap.fromObject(["\ufdd0'type", "\ufdd0'mouse", "\ufdd0'dt-type", "\ufdd0'id"], {"\ufdd0'type":"\ufdd0'button", "\ufdd0'mouse":mouse, "\ufdd0'dt-type":dt_type, "\ufdd0'id":text}), text], true), iter__3171.call(null, cljs.core.rest.call(null, s__3172__$1)))
           }else {
             return null
           }
@@ -21121,36 +21121,36 @@ mashup.dom.github_div = function github_div(item) {
 mashup.dom.dt_title = function dt_title(text) {
   return cljs.core.PersistentVector.fromArray(["\ufdd0'div.row-fluid", cljs.core.PersistentVector.fromArray(["\ufdd0'div.span12", cljs.core.PersistentVector.fromArray(["\ufdd0'h2.title-color", text], true)], true)], true)
 };
-mashup.dom.render_all = function render_all(p__12687) {
-  var map__12701 = p__12687;
-  var map__12701__$1 = cljs.core.seq_QMARK_.call(null, map__12701) ? cljs.core.apply.call(null, cljs.core.hash_map, map__12701) : map__12701;
-  var tw_uname = cljs.core._lookup.call(null, map__12701__$1, "\ufdd0'tw-uname", null);
-  var data = cljs.core._lookup.call(null, map__12701__$1, "\ufdd0'data", null);
+mashup.dom.render_all = function render_all(p__3175) {
+  var map__3189 = p__3175;
+  var map__3189__$1 = cljs.core.seq_QMARK_.call(null, map__3189) ? cljs.core.apply.call(null, cljs.core.hash_map, map__3189) : map__3189;
+  var tw_uname = cljs.core._lookup.call(null, map__3189__$1, "\ufdd0'tw-uname", null);
+  var data = cljs.core._lookup.call(null, map__3189__$1, "\ufdd0'data", null);
   return cljs.core.PersistentVector.fromArray(["\ufdd0'div.container-fluid", cljs.core.PersistentVector.fromArray(["\ufdd0'div.row-fluid", cljs.core.PersistentVector.fromArray(["\ufdd0'div.span2", mashup.dom.create_buttons.call(null, mashup.dom.dt_btns)], true), cljs.core.PersistentVector.fromArray(["\ufdd0'div.span10", mashup.dom.heading.call(null, "Mashup Generator"), data == null ? mashup.dom.spinner : function() {
-    var iter__2540__auto__ = function iter__12702(s__12703) {
+    var iter__2540__auto__ = function iter__3190(s__3191) {
       return new cljs.core.LazySeq(null, false, function() {
-        var s__12703__$1 = s__12703;
+        var s__3191__$1 = s__3191;
         while(true) {
-          if(cljs.core.seq.call(null, s__12703__$1)) {
-            var vec__12709 = cljs.core.first.call(null, s__12703__$1);
-            var dt_group = cljs.core.nth.call(null, vec__12709, 0, null);
-            var items = cljs.core.nth.call(null, vec__12709, 1, null);
+          if(cljs.core.seq.call(null, s__3191__$1)) {
+            var vec__3197 = cljs.core.first.call(null, s__3191__$1);
+            var dt_group = cljs.core.nth.call(null, vec__3197, 0, null);
+            var items = cljs.core.nth.call(null, vec__3197, 1, null);
             return cljs.core.cons.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'div", mashup.dom.dt_title.call(null, dt_group), function() {
-              var iter__2540__auto__ = function(vec__12709, dt_group, items) {
-                return function iter__12710(s__12711) {
-                  return new cljs.core.LazySeq(null, false, function(vec__12709, dt_group, items) {
+              var iter__2540__auto__ = function(vec__3197, dt_group, items) {
+                return function iter__3198(s__3199) {
+                  return new cljs.core.LazySeq(null, false, function(vec__3197, dt_group, items) {
                     return function() {
-                      var s__12711__$1 = s__12711;
+                      var s__3199__$1 = s__3199;
                       while(true) {
-                        if(cljs.core.seq.call(null, s__12711__$1)) {
-                          var item = cljs.core.first.call(null, s__12711__$1);
+                        if(cljs.core.seq.call(null, s__3199__$1)) {
+                          var item = cljs.core.first.call(null, s__3199__$1);
                           var source = item.call(null, "\ufdd0'source");
                           return cljs.core.cons.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'div.row-fluid", cljs.core.PersistentVector.fromArray(["\ufdd0'div.span12", function() {
-                            var G__12713 = source;
-                            if(cljs.core._EQ_.call(null, "\ufdd0'github", G__12713)) {
+                            var G__3201 = source;
+                            if(cljs.core._EQ_.call(null, "\ufdd0'github", G__3201)) {
                               return mashup.dom.github_div.call(null, item)
                             }else {
-                              if(cljs.core._EQ_.call(null, "\ufdd0'twitter", G__12713)) {
+                              if(cljs.core._EQ_.call(null, "\ufdd0'twitter", G__3201)) {
                                 return mashup.dom.twitter_div.call(null, item, tw_uname)
                               }else {
                                 if("\ufdd0'else") {
@@ -21160,18 +21160,18 @@ mashup.dom.render_all = function render_all(p__12687) {
                                 }
                               }
                             }
-                          }()], true)], true), iter__12710.call(null, cljs.core.rest.call(null, s__12711__$1)))
+                          }()], true)], true), iter__3198.call(null, cljs.core.rest.call(null, s__3199__$1)))
                         }else {
                           return null
                         }
                         break
                       }
                     }
-                  }(vec__12709, dt_group, items), null)
+                  }(vec__3197, dt_group, items), null)
                 }
-              }(vec__12709, dt_group, items);
+              }(vec__3197, dt_group, items);
               return iter__2540__auto__.call(null, items)
-            }()], true), iter__12702.call(null, cljs.core.rest.call(null, s__12703__$1)))
+            }()], true), iter__3190.call(null, cljs.core.rest.call(null, s__3191__$1)))
           }else {
             return null
           }

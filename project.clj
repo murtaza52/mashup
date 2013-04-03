@@ -1,4 +1,3 @@
-
 (defproject mashup "0.1.0"
   :description "Mashup Generator"
   :url "http://github.com/murtaza52/mashup"
@@ -25,13 +24,12 @@
   :repl-options {:init-ns mashup.handler
                  :init (do
                          (use 'ring.util.serve)
-                         (serve app))}
+                         (serve app))}		;; serves the app when the repl starts.
   :profiles {:dev {:dependencies [[ring-mock "0.1.3"]
                                   [ring-serve "0.1.2"]
                                   [midje "1.5.0" :exclusions [joda-time]]
                                   [marginalia "0.7.1" :exclusions [org.clojure/tools.namespace]]]}}
-  :cljsbuild {
-              :builds
+  :cljsbuild {:builds
               [{:source-paths ["src-cljs"],
                 :compiler
                 {:pretty-print true,
