@@ -2,8 +2,7 @@
 ;; The below ns implements the service protocol for the github service.
 
 (ns mashup.github
-  (:use [mashup.service-proto]
-        [midje.sweet :only [facts fact anything]]
+  (:use [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
         [mashup.utils :only [parse-date]]
@@ -48,11 +47,3 @@
                (-> (gt-parse events) first) => #(-> % :time type (= org.joda.time.DateTime)))))
 
 (add-service [gt-config [gt-fetch gt-parse]])
-
-;; The github serice object
-
-(def github
-  (reify
-    Service
-    (fetch [this] (gt-fetch [c/github-user-name 1]))
-    (parse [this data] (gt-parse data))))

@@ -11,29 +11,9 @@
         [midje.sweet :only [facts fact]]
         [clojure.set :only [difference]]
         [mashup.services :only [exec-services]])
-  (:require [mashup.config :as c]
-            [mashup.service-proto :as p]))
+  (:require [mashup.config :as c]))
 
-;; The objects of the Service protocol.
-;;(def services [twitter github])
-
-;; ### Data Retrieval
-;; A future is used to retrieve and parse the data in parallel for both
-;; the services. The resulting data is then dereferenced and
-;; concatenated.
-
-;; (defn get-data
-;;   "Retrieve and parse the data in parallel using a future"
-;;   []
-;;   (->>
-;;    (map #(future
-;;             (->> (p/fetch %)
-;;                  (p/parse %)))
-;;         services)
-;;    (map deref)
-;;    (apply concat)))
-
-;; ### Date Pocessing
+;; ### Date Processing
 ;; The functions below deal with the processing of the date for each
 ;; item.
 
@@ -129,8 +109,3 @@
          (map add-date-for-types)
          (reset! retrieved-data)))
   @retrieved-data)
-
-
-;; (defn fetch-it!
-;;   []
-;;   (->> (get-data) (map add-date-for-types)))

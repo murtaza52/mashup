@@ -17,7 +17,6 @@
         [clojure.pprint :only [pprint]])
   (:require [mashup.config :as config]))
 
-
 ;; ### Utility Functions
 ;; Functions for grouping, sorting and removing date instances from the data.
 

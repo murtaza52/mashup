@@ -7,8 +7,7 @@
         [mashup.utils :only [parse-date]]
         [mashup.services :only [add-service]])
   (:require [oauth.client :as oauth]
-            [mashup.config :as c]
-            [mashup.service-proto :as proto]))
+            [mashup.config :as c]))
 
 (def tw-date (parse-date "E MMM dd HH:mm:ss Z YYYY"))
 
@@ -55,11 +54,3 @@
                                       (-> parsed-tweets first :time type (= org.joda.time.DateTime))))))
 
 (add-service [tw-config [make-creds tw-fetch tw-parse]])
-
-;; The twitter service object
-
-(def twitter
-  (reify
-    proto/Service
-    (fetch [this] (-> (make-creds tw-config) tw-fetch))
-    (parse [this data] (tw-parse data))))
