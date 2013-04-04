@@ -1,5 +1,8 @@
 
-(ns mashup.services)
+(ns mashup.services
+  (:use [clojure.pprint :only [pprint]]
+        ;;[midje.sweet :only [fact facts]]
+        ))
 
 ;; ### Services Atom
 ;; The atom is a vector of vector. Each inner vector contains n number of func.
@@ -13,11 +16,18 @@
 
 (defn exec-services
   ([] (exec-services @services))
-  ([v] (->> v
-                (map (fn [[config fns]]
-                       (future ((apply comp (reverse fns)) config))))
-                (map deref)
-                (apply concat))))
-;; (fact "C"
-;;       (let [s [[[1] [inc]]
-;;                [[2 ]]]]))
+  ([v]
+     (pprint v)
+     (->>
+            (doall (map (fn [[config fns]]
+                          (future ((apply comp (reverse fns)) config)))
+                        v))
+            (map deref)
+            (apply concat))))
+
+;; (facts "C"
+;;       (let [s [[1 [inc]]
+;;                [2 [inc inc]]]]
+;;         (fact "c"
+;;               (exec-services [[1 [inc]]
+;;                [2 [inc inc]]]) => [2 3])))

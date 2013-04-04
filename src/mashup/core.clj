@@ -9,7 +9,10 @@
         [midje.sweet :only [facts fact]]
         [clojure.set :only [difference]]
         [mashup.services :only [exec-services]])
-  (:require [mashup.config :as c]))
+  (:require [mashup.config :as c]
+            [mashup.github :as gt]
+            [mashup.twitter :as tw]
+            ))
 
 ;; ### Date Processing
 ;; The functions below deal with the processing of the date for each
@@ -101,9 +104,12 @@
 
 (defn fetch-it!
   [fetch-again?]
-  (when (or fetch-again?
+  (if (or fetch-again?
             (nil? @retrieved-data))
-    (->> (exec-services)
+    (doall (->> (exec-services)
          (map add-date-for-types)
          (reset! retrieved-data)))
-  @retrieved-data)
+    @retrieved-data))
+
+;; (facts "The fetch-it! function sucessfully retrieves data"
+;;        (data ))
