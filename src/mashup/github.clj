@@ -5,8 +5,7 @@
   (:use [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
-        [mashup.utils :only [parse-date]]
-        [mashup.services :only [add-service]])
+        [mashup.utils :only [parse-date]])
   (:require [tentacles.events :as ev]
             [clj-time.format :as time]
             [mashup.config :as c]))
@@ -46,4 +45,4 @@
          (fact "Each parsed event has a time of type org.joda.time.DateTime"
                (-> (gt-parse events) first) => #(-> % :time type (= org.joda.time.DateTime)))))
 
-(add-service [gt-config [gt-fetch gt-parse]])
+(def srv [gt-config [gt-fetch gt-parse]])

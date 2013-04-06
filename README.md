@@ -46,7 +46,9 @@ The project uses the excellent midje library for writing and running
 tests err... facts ! (The cljs code is not tested and midje doesnt
 support it)
 
-The test can be run using lein midje
+The test are intermingled with the code. This is a personal preference as it minimizes context switiching.
+
+Tests can be run using `lein midje :autotest`.
 
 ## Dependencies
 
@@ -88,4 +90,3 @@ unable to execute the js needed for this.
 ## License
 
 Copyright © 2013 Murtaza Husain
-
