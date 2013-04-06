@@ -8,16 +8,11 @@
   (:use [shoreleave.middleware.rpc :only [defremote]]
         [mashup.core :only [fetch-it!]]
         [midje.sweet :only [facts fact]]
-        [mashup.utils :only [dissoc-date-from-seq-of-maps sort-map-by-date group-by-key]]
+        [mashup.utils :only [dissoc-date-from-seq-of-maps sort-map-by-date group-by-key get-val-from-first]]
         [clojure.pprint :only [pprint]]
         [swiss-arrows.core :only [-<>]]
         [clojure.algo.generic.functor :only [fmap]])
   (:require [mashup.config :as config]))
-
-(defn get-val-from-first
-  "Function for extracting the date-time from the value of the given vector of maps."
-  [key s]
-  (-> s first key))
 
 (def get-time-value (partial get-val-from-first :time))
 

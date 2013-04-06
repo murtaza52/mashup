@@ -184,3 +184,9 @@
                     :b [{:time (date-time 2013) :h 5}]}) => (fn [data]
                                                                      (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
                                                                              (-> data vals first first))))
+
+
+(defn get-val-from-first
+  "Function for extracting the date-time from the value of the given vector of maps."
+  [key s]
+  (-> s first key))
