@@ -4,6 +4,20 @@
         [midje.sweet :only [facts fact]]
         [clojure.set :only [difference]]))
 
+;; Predicate fn to test of the given arg is of type org.joda.time.DateTime.
+
+(defn date?
+  "Returns true if the type of the arg is of org.joda.time.DateTime"
+  [v]
+  (= (type v) org.joda.time.DateTime))
+
+(fact "Returns true if the type of the arg is of org.joda.time.DateTime"
+      (date? (date-time 2012 2 3 4)) => true
+      (date? "2012") => false
+      (date? 2012) => false)
+
+;; Parses a given date given a format and a date. clj-time accepts two types of formatters, string and keywords. The below fn provides a uniform interface for invoking both.
+
 (defn parse-date
   "Returns a date parser based on the formatter"
   [format]
@@ -49,22 +63,6 @@
 ;;      (interpose "-")
 ;;      (apply str))))
 
-;; (facts "Converts the given date into string"
-;;        (fact "Returns a date string for the year"
-;;              (stringify-date :year (date-time 2013 5 12)) => "2013")
-;;        (fact "Returns a date string for the month"
-;;              (stringify-date :month (date-time 2013 5 12)) => "5-2013")
-;;        (fact "Returns a date string for the day"
-;;              (stringify-date :day (date-time 2013 5 12)) => "5-12-2013"))
-
-;; (defn floor-and-string
-;;   "Floor the given date and return its string representation"
-;;   [dt-type date]
-;;   (->>
-;;    date
-;;    (floor-date dt-type)
-;;    (stringify-date dt-type)))
-
 (def date-fn {:day day :month month :year year :hour hour :minute minute :sec sec :milli milli})
 
 (defn get-date-fns
@@ -75,39 +73,50 @@
         (conj f))))
 
 (defn floor-date
-  [dt-key date]
-  (->> (get-date-fns dt-key)
+  "Floors the date based on the given dt-type."
+  [dt-type date]
+  (->> (get-date-fns dt-type)
        (map #(% date))
        reverse
        (apply date-midnight)))
 
-(floor-date :year (date-time 2013 11 4 5 6 7))
+(facts "Floors the given date based on the given type"
+       (fact "Floors it to the year"
+             (floor-date :year (date-time 2013 5 12 23 13)) => (date-midnight 2013))
+       (fact "Floors it to the month"
+             (floor-date :month (date-time 2013 5 12 23 13)) => (date-midnight 2013 5))
+       (fact "Floors it to the day"
+             (floor-date :day (date-time 2013 5 12 23 13)) => (date-midnight 2013 5 12)))
+
+;; Custom formatters that are needed for converting a date into a string. The given clj-time formatter are used where applicable (:year), and string ones are specified where needed (:day and :month).
+
+(def custom-formatters {:day "MM-dd-YYYY" :month "MM-YYYY" :year :year})
 
 (defn unparse-date
-  "Returns a date parser based on the formatter"
+  "Returns the string representation of a date given the formatter."
   [format date]
   (cond
    (keyword? format) (unparse (formatters format) date)
    (string? format) (unparse (formatter format) date)))
 
-(def custom-formatters {:day "MM-dd-YYYY" :month "MM-YYYY" :year :year})
-
-(unparse-date (:month custom-formatters) (date-time 2013 11 4 5 6))
-
-;; (facts "Given a date and type floor it and return its string represetation as a map"
-;;       (let [v (floor-and-string :month (date-time 2013 12 5 6 12 21))]
-;;         (fact "The type of the value is string"
-;;               (type v) => java.lang.String)))
+(facts "Converts the given date into string"
+       (fact "Returns a date string for the year"
+             (unparse-date (:year custom-formatters) (date-time 2013 5 12)) => "2013")
+       (fact "Returns a date string for the month"
+             (unparse-date (:month custom-formatters) (date-time 2013 5 12)) => "05-2013")
+       (fact "Returns a date string for the day"
+             (unparse-date (:day custom-formatters) (date-time 2013 5 12)) => "05-12-2013"))
 
 (defn floor-and-string
-  [[date] k]
-  (->> (floor-date k date)
-       (unparse-date (k custom-formatters))))
+  "Floors and returns the string representation given the date and dt-type."
+  [[date] dt-type]
+  (->> (floor-date dt-type date)
+       (unparse-date (dt-type custom-formatters))))
 
-
-;; (fact "Given a map with a time key, it returns back a map with dates for all the dt-types."
-;;       (-> (add-date-strings {:a 2} (date-time 2012)) keys) => #(empty?
-;;                                                                 (difference (set dt-types) (set %))))
+(facts "Given a date and type, floor it and return its string represetation."
+       (let [v (floor-and-string [(date-time 2013 12 5 6 12 21)] :month)]
+        (fact "The type of the value is string"
+              (type v) => java.lang.String)))
 
 (defn date-time-comparator
   "Predicate function for comparing two date-time's"
@@ -119,4 +128,10 @@
 
 (def multi-parser (formatter (default-time-zone) "MM-dd-YYYY" "MM-YYYY" "YYYY"))
 
-(parse multi-parser "2012")
+(facts "The multi-parse can be used as a formatter to parse dates in day, month and year formats."
+       (fact "It can parse a date in YYYY format"
+             (parse multi-parser "2012") => date?))
+
+;; (fact "Given a map with a time key, it returns back a map with dates for all the dt-types."
+;;       (-> (add-date-strings {:a 2} (date-time 2012)) keys) => #(empty?
+;;                                                                 (difference (set dt-types) (set %))))
