@@ -8,10 +8,18 @@
         [midje.sweet :only [facts fact]]
         [clojure.set :only [difference]]
         [mashup.services :only [add-service exec-services]]
-        [mashup.utils :only [add-date-strings]])
+        [mashup.utils.date :only [floor-and-string]]
+        [mashup.utils.collection :only [map-and-zip]])
   (:require [mashup.config :as c]
             [mashup.github :as gt]
             [mashup.twitter :as tw]))
+
+;; The date types which will be added to each item.
+(def dt-keys [:day :month :year])
+
+(def make-date-strings (map-and-zip floor-and-string dt-keys))
+
+(make-date-strings (date-time 2011 2 3 4 5))
 
 ;; Populating the service atom with the twitter and github services.
 
@@ -30,7 +38,8 @@
   (if (or fetch-again?
             (nil? @retrieved-data))
     (->> (exec-services)
-         (map #(add-date-strings % (:time %)))
+         (map #(-> (make-date-strings (:time %))
+                   (merge %)))
          (reset! retrieved-data))
     @retrieved-data))
 

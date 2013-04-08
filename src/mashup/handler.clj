@@ -6,7 +6,7 @@
         [mashup.remote :only [fetch-data]]
         [ring.util.response :only [file-response]]
         [midje.sweet :only [facts fact]]
-        [mashup.utils :only [mock-req]])
+        [mashup.utils.request :only [mock-req]])
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [shoreleave.middleware.rpc :as rpc]))

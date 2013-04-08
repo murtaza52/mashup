@@ -4,7 +4,7 @@
         [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
-        [mashup.utils :only [parse-date]])
+        [mashup.utils.date :only [parse-date]])
   (:require [oauth.client :as oauth]
             [mashup.config :as c]))
 

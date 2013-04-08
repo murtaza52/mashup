@@ -1,97 +1,14 @@
-(ns mashup.utils
-  (:use [clj-time.format :only [parse formatter formatters]]
-        [ring.mock.request :only [request]]
-        [clj-time.core :only [date-time year month day before?]]
-        [midje.sweet :only [facts fact]]
+(ns mashup.utils.collection
+  (:use [midje.sweet :only [facts fact]]
         [clojure.set :only [map-invert difference]]
-        [clojure.algo.generic.functor :only [fmap]]))
+        [clojure.algo.generic.functor :only [fmap]]
+        [clj-time.core :only [date-time]]))
 
-(defn parse-date
-  "Returns a date parser based on the formatter"
-  [format]
-  (fn [date-string]
-    (if (keyword? format)
-      (parse (formatters format) date-string)
-      (parse (formatter format) date-string))))
-
-;; ### Date Processing
-;; The functions below deal with the processing of the date for each
-;; item.
-
-;; Functions to be applied to create a string representation of the date.
-
-(def to-string-date-fns {:day [month day year] :month [month year] :year [year]})
-
-;; Functions to be applied to floor the date.
-
-(def floor-date-fns {:day [day month year] :month [month year] :year [year]})
-
-(defn floor-date
-  "Floors the given date based on the date type."
-  [dt-type dt]
-  (->> (dt-type floor-date-fns)
-       (reverse)
-       (map #(% dt))
-       (apply date-time)))
-
-(facts "Floors the given date based on the given type"
-       (fact "Floors it to the year"
-             (floor-date :year (date-time 2013 5 12 23 13)) => (date-time 2013))
-       (fact "Floors it to the month"
-             (floor-date :month (date-time 2013 5 12 23 13)) => (date-time 2013 5))
-       (fact "Floors it to the day"
-             (floor-date :day (date-time 2013 5 12 23 13)) => (date-time 2013 5 12)))
-
-(defn stringify-date
-  "Creates a string representation of the date based on the given date and date type."
-  [dt-type dt]
-  (let [fns (dt-type to-string-date-fns)]
-    (->>
-     (map #(%1 dt) fns)
-     (interpose "-")
-     (apply str))))
-
-(facts "Converts the given date into string"
-       (fact "Returns a date string for the year"
-             (stringify-date :year (date-time 2013 5 12)) => "2013")
-       (fact "Returns a date string for the month"
-             (stringify-date :month (date-time 2013 5 12)) => "5-2013")
-       (fact "Returns a date string for the day"
-             (stringify-date :day (date-time 2013 5 12)) => "5-12-2013"))
-
-(defn floor-and-string
-  "Floor the given date and return its string representation"
-  [dt-type date]
-  (->>
-   date
-   (floor-date dt-type)
-   (stringify-date dt-type)))
-
-(facts "Given a date and type floor it and return its string represetation as a map"
-      (let [v (floor-and-string :month (date-time 2013 12 5 6 12 21))]
-        (fact "The type of the value is string"
-              (type v) => java.lang.String)))
-
-;; The date types which will be added to each item.
-(def dt-types [:day :month :year])
-
-(defn add-date-strings
-  "assoc a string representation of date for each date type with the item."
-  [m date]
-  (->> (map #(floor-and-string % date) dt-types)
-       (zipmap dt-types)
-       (merge m)))
-
-(fact "Given a map with a time key, it returns back a map with dates for all the dt-types."
-      (-> (add-date-strings {:a 2} (date-time 2012)) keys) => #(empty?
-                                                                       (difference (set dt-types) (set %))))
-
-(defn mock-req
-  "Utility function for creating a mock request"
-  [app-routes]
-  (fn [[verb url & params]]
-    (app-routes (request verb url (first params)))))
-
+(defn map-and-zip
+  [f ks]
+  (fn [& params]
+    (->> (map #(f params %) ks)
+         (zipmap ks))))
 
 ;; ### Utility Functions
 ;; Functions for grouping, sorting and removing date instances from the data.
@@ -135,14 +52,6 @@
 
 ;; #### Sorting Functionality
 
-(defn date-time-comparator
-  "Predicate function for comparing two date-time's"
-  [time1 time2]
-  (before? time1 time2))
-
-(fact "Returns true if the first date is chronologically before the second date."
-      (date-time-comparator (date-time 2011) (date-time 2013)) => true)
-
 (defn sort-map-by-value
   "Given a map return a sorted map, in which the sort is done on the map's values, instead of keys.
    Takes a function as an input, which will be used  for sorting
@@ -155,8 +64,6 @@
        map-invert
        (into (sorted-map-by #(cf (kf %1) (kf %2))))
        map-invert)))
-
-(def sort-map-by-date (sort-map-by-value date-time-comparator))
 
 ;; (fact "Given an input as { 'ab' [ {:time (date-time ...)..} .. ] ..} sorts the map based on the time key of the first element."
 ;;       (sort-map-by-date {"3-19-2013" [{:time (date-time 2013 3 19 12 14 45)}]

@@ -5,7 +5,7 @@
   (:use [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
-        [mashup.utils :only [parse-date]])
+        [mashup.utils.date :only [parse-date]])
   (:require [tentacles.events :as ev]
             [clj-time.format :as time]
             [mashup.config :as c]))
