@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8" content="text/html" http-equiv="Content-Type" /><meta content="FIXME: write description" name="description" /><style type="text/css">/**
+<html><head><meta charset="utf-8" content="text/html" http-equiv="Content-Type" /><meta content="Mashup Generator" name="description" /><style type="text/css">/**
  * SyntaxHighlighter
  * http://alexgorbatchev.com/SyntaxHighlighter
  *
@@ -3028,229 +3028,8 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>mashup -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">mashup</h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>FIXME: write description</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.5</td></tr><tr><td class="dep-name">clj-oauth</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.apache.httpcomponents/httpclient</td><td class="dotted"><hr /></td><td class="dep-version">4.2.3</td></tr><tr><td class="dep-name">org.thnetos/cd-client</td><td class="dotted"><hr /></td><td class="dep-version">0.3.4</td></tr><tr><td class="dep-name">ring/ring-core</td><td class="dotted"><hr /></td><td class="dep-version">1.2.0-beta1</td></tr><tr><td class="dep-name">twitter-api</td><td class="dotted"><hr /></td><td class="dep-version">0.7.2</td></tr><tr><td class="dep-name">tentacles</td><td class="dotted"><hr /></td><td class="dep-version">0.2.4</td></tr><tr><td class="dep-name">webfui</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.4</td></tr><tr><td class="dep-name">shoreleave</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-remote-ring</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-remote</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">domina</td><td class="dotted"><hr /></td><td class="dep-version">1.0.1</td></tr><tr><td class="dep-name">org.clojure/google-closure-library-third-party</td><td class="dotted"><hr /></td><td class="dep-version">0.0-2029</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#mashup.cljs.core">mashup.cljs.core</a></li><li><a href="#mashup.cljs.dom">mashup.cljs.dom</a></li><li><a href="#mashup.cljs.listeners">mashup.cljs.listeners</a></li><li><a href="#mashup.cljs.remote">mashup.cljs.remote</a></li><li><a href="#mashup.cljs.state">mashup.cljs.state</a></li><li><a href="#"></a></li><li><a href="#mashup.config">mashup.config</a></li><li><a href="#mashup.github">mashup.github</a></li><li><a href="#mashup.handler">mashup.handler</a></li><li><a href="#mashup.mashit">mashup.mashit</a></li><li><a href="#mashup.remote">mashup.remote</a></li><li><a href="#mashup.service-proto">mashup.service-proto</a></li><li><a href="#mashup.twitter">mashup.twitter</a></li><li><a href="#mashup.utils">mashup.utils</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.core" name="mashup.cljs.core"><h1 class="project-name">mashup.cljs.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.core
-  (:use [webfui.framework :only [launch-app]]
-        [mashup.utils :only [log set-repl]]
-        [mashup.dom :only [render-all]]
-        [mashup.state :only [app-state]]
-        [mashup.remote :only [fetch-data get-twitter-uname]]
-        [mashup.listeners :only [add-listener]])
-  (:require [domina :as dom]))</pre></td></tr><tr><td class="docs"><p>Calling the utility function to set the repl.
-Currently this doesnt work as webfui replaces the complete body and
-hence also replaces the repl callback that is included into the body.
-Will need to patch the webfui lib for this to work.</p>
-</td><td class="codes"><pre class="brush: clojure">(set-repl)</pre></td></tr><tr><td class="docs"><p>Fetching the data with the :day provided as the default grouping
-criteria. Other grouping keys - :month and :year can be provided as needed.</p>
-</td><td class="codes"><pre class="brush: clojure">(fetch-data :day)</pre></td></tr><tr><td class="docs"><p>Fetching the user's screen name for twitter. This is used for display purposes.</p>
-</td><td class="codes"><pre class="brush: clojure">(get-twitter-uname)</pre></td></tr><tr><td class="docs"><p>Webfui's launch-app function takes the state and a render function.
-It passess the state in the render function, generates html from
-the resulting vector (hiccup like dom structure), and replaces the
-body with the generated html.</p>
-
-<p>Webfui also ensures that the state and the dom are in sync. Any
-changes to the state atom are reflected back in the dom.</p>
-</td><td class="codes"><pre class="brush: clojure">(launch-app app-state render-all)</pre></td></tr><tr><td class="docs"><p>calls the javascript function to set the button state.
-(js/setButton)</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Add the listener for mouse clicks, for the Day, Month, Year buttons.</p>
-</td><td class="codes"><pre class="brush: clojure">(add-listener)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.dom" name="mashup.cljs.dom"><h1 class="project-name">mashup.cljs.dom</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>DOM Construction</h3>
-
-<p>This ns contains the different functions used for DOM construction.
-The code in this ns does not have any dependencies and is pure, and can be used
-on both on the server and client.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.dom)</pre></td></tr><tr><td class="docs"><p>The dt-btns is a vector of vectors, used for creating the buttons.
-The first value in the vector is used for the text and id, the second
-is used for setting a custom attribute and the third for setting the
-listener for a mouse event.</p>
-
-<p>The value of the custom attribute is used for storing the param that
-will be passed to the remote function for retrieving data</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def dt-btns
-  (mapv #(vector %1 %2 %3) [&quot;Day&quot; &quot;Month&quot; &quot;Year&quot;] [:day :month :year] (repeat :change-grouping)))</pre></td></tr><tr><td class="docs"><p>Method for creating the toggle buttons. It first creates a div that
-can affixed to the side panel, and then loops over a btns vector to
-create them.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn create-buttons
-  [btns]
-  [:div.btn-group.bs-docs-sidenav.affix.btn-top-margin {:data-toggle &quot;buttons-radio&quot;}
-   (for [[text dt-type mouse] btns]
-     [:button.btn.btn-primary {:type :button :mouse mouse :dt-type dt-type :id text} text])])</pre></td></tr><tr><td class="docs"><p>Spinner that will be displayed when the data is loading.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def spinner [:div.row-fluid
-              [:div.span6.offset4
-               [:img {:src &quot;/img/ajax-loader.gif&quot;}]]])</pre></td></tr><tr><td class="docs"><p>The page heading that will be displayed at the top of the page.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn heading
-  [text]
-  [:div.row-fluid
-   [:div.span12.page-header.title-color
-    [:h1 text]]])</pre></td></tr><tr><td class="docs"><p>The twitter block. It outputs the tweet in a blockquote with
-the author's name.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn twitter-div
-  [item tw-uname]
-  [:div (str &quot;Tweeted on &quot; (item :day))
-   [:blockquote
-    [:p (str (item :text))]
-    [:small tw-uname]]])</pre></td></tr><tr><td class="docs"><p>The github block. It outputs the day the github evet took place, the
-type of event and the repository on which the event took place.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn github-div
-  [item]
-  [:div
-   [:code &quot;Github Activity&quot;]
-   (str &quot; on &quot; (item :day))
-   [:p
-   [:span.muted (item :type)]
-    [:span &quot; in repo &quot;]
-    [:em (str &quot; &quot;  (item :repo))]]])</pre></td></tr><tr><td class="docs"><p>The title for grouping the items by day, month, year.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn dt-title
-  [text]
-  [:div.row-fluid
-   [:div.span12
-    [:h2.title-color text]]])</pre></td></tr><tr><td class="docs"><p>The function for creating the body. This function will also be passed
-to the launch-app macro, and will be called whenever the state
-changes.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Creates the body and takes the state as the input.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn render-all
-  [{:keys [data tw-uname]}]
-  [:div.container-fluid
-   [:div.row-fluid
-    [:div.span2
-     (create-buttons dt-btns)]
-    [:div.span10
-     (heading &quot;Mashup Generator&quot;)
-     (if (nil? data) ;; Spinner will be diaplyed when there is no data.
-       spinner
-       (for [[dt-group items] data]
-         [:div
-          (dt-title dt-group)
-          (for [item items
-                :let [source (item :source)]]
-            [:div.row-fluid
-             [:div.span12
-              (case source
-                :twitter (twitter-div item tw-uname)
-                :github (github-div item))]])]))]]
-   [:script {:type &quot;text/javascript&quot;}
-   &quot;$(document).ready(function(){$('#Day').button('toggle');});&quot;]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.listeners" name="mashup.cljs.listeners"><h1 class="project-name">mashup.cljs.listeners</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.listeners
-  (:use [webfui.utilities :only [get-attribute clicked]]
-        [mashup.remote :only [fetch-data]])
-  (:use-macros [webfui.framework.macros :only [add-mouse-watch]]))</pre></td></tr><tr><td class="docs"><h3>The add-mouse-watch macro</h3>
-
-<p>The below function gets called whenever there is a mouse event for an
-element with the 'mouse' attribute as :change-grouping</p>
-
-<p>The webfui framework passess the first element (element on which the
-mouse down event takes place) and second element (element on which
-the mouse up event takes place).</p>
-
-<p>Also the elements are passed as opposed to events.</p>
-
-<p>In the case where there is a click event as opposed to a drag event,
-the first and second element are same. The clicked macro helps to
-identify this.</p>
-
-<p>The return value of the function is patched with the state atom. Thus
-the user only returns any changes intended for the state, which is
-then reflected back to the DOM due to the bindings.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>The below callback first retrieves the value of the custom attribute
-:dt-type. It then calls the remote api fetch-data. The fetch-data
-function will fetch the data and swap! the value in the state atom.
-The function below returns {:data nil}, this will cause the dom to
-display a spinner.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn add-listener
-  []
-  (add-mouse-watch :change-grouping [state first-element last-element]
-                   (when (clicked first-element last-element)
-                     (-&gt; (get-attribute first-element :dt-type)
-                         (fetch-data))
-                     {:data nil})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.remote" name="mashup.cljs.remote"><h1 class="project-name">mashup.cljs.remote</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Remote AJAX calls</h3>
-
-<p>Remote ajax calls are made using shoreleave which builds upon fetch.
-Shoreleave adds additional security to fetch by ensuring that tokens
-are sent in each request to protect against CSRF attacks.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.remote
-  (:use [mashup.utils :only [log]]
-        [mashup.state :only [app-state]])
-  (:require [shoreleave.remotes.http-rpc :as rpc])
-  (:require-macros [shoreleave.remotes.macros :as macros]))</pre></td></tr><tr><td class="docs"><p>The remore-callback macro, takes three parameters the first one being a
-symbol which represnets the name of the remote function (exposed
-using defremote on the server side), a vector of params which the
-rempte function will be called with and an anonymous function which
-is called with the result of the ajax call.</p>
-
-<p>The below function fetches the data retrieved from the github and
-twitter services, based on the date type grouping. The fetched
-data is then set in the state atom.</p>
-
-<p>Ideally the data should be retrieved just once and then the grouping
-should be done on the client side. However in this case the grouping
-depends upon clj-time whose namespaces can not be utilized in cljs.</p>
-
-<p>Thus whenever the user wants to see the data grouped by a different
-date type - day, month or year - a call is made to the server with
-that type</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn fetch-data
-    [dt-type]
-    (rpc/remote-callback :fetch-data [dt-type]
-                         (fn [data]
-                           (log &quot;data-received&quot; data)
-                           (swap! app-state
-                                  (fn
-                                    [{:keys [tw-uname]}]
-                                    {:data data :tw-uname tw-uname})))))</pre></td></tr><tr><td class="docs"><p>The below function fetches the user's twitter sceen name. The result
-is set in the state atom.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn get-twitter-uname
-    []
-    (rpc/remote-callback :get-twitter-uname []
-                         (fn [uname]
-                           (log &quot;name-received&quot; uname)
-                           (swap! app-state
-                                  (fn
-                                    [{:keys [data]}]
-                                    {:data data :tw-uname uname})))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.state" name="mashup.cljs.state"><h1 class="project-name">mashup.cljs.state</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>State Atom</h2>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.state)</pre></td></tr><tr><td class="docs"><p>The atom stores the state of the application. This atom can have
-any arbitrary value. The atom is passed to the rendering function
-which builds the DOM. Any changes in the state causes the rendering
-function to recreate the DOM, and any deltas are rerendered by the
-webfui framework.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def app-state (atom {:data nil :tw-uname nil}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#" name=""><h1 class="project-name"></h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(comment
-  ;; ### CLJS Utilities
-;; This ns contains utility functions for clojurescript development.
-(ns mashup.utils
-  (:require [clojure.browser.repl :as repl]))
-;; Atom to store the mode, by default the mode is set to dev.
-(def state (atom {:mode :dev}))
-;; The log function helps in printing both strings and javascript objects.
-;; The code was inspired from Chris Ganger's waltz lib.
-(defn log [msg data]
-  &quot;The function takes a msg and data as input. They are appended and printed
-  on the browser's js console&quot;
-  (when (and js/console
-             (= (@state :debug) :dev)
-    (let [d (if (string? data)
-              data
-              (pr-str data))
-          s (str msg &quot; :: &quot; d)]
-      (.log js/console s)))))
-;; The repl is only avalaible in the dev mode. This is to pevent errors
-;; in unsupported browsers such as IE in production.
-(defn set-repl []
-  (when (and js/console (= (@state :debug) :dev))
-    (repl/connect &quot;http://localhost:9000/repl&quot;))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.config" name="mashup.config"><h1 class="project-name">mashup.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</script><title>mashup -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">mashup</h1><h2 class="project-version">0.1.0</h2><br /><p>Mashup Generator</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.5</td></tr><tr><td class="dep-name">clj-oauth</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.apache.httpcomponents/httpclient</td><td class="dotted"><hr /></td><td class="dep-version">4.2.3</td></tr><tr><td class="dep-name">org.thnetos/cd-client</td><td class="dotted"><hr /></td><td class="dep-version">0.3.4</td></tr><tr><td class="dep-name">ring/ring-core</td><td class="dotted"><hr /></td><td class="dep-version">1.2.0-beta1</td></tr><tr><td class="dep-name">twitter-api</td><td class="dotted"><hr /></td><td class="dep-version">0.7.2</td></tr><tr><td class="dep-name">tentacles</td><td class="dotted"><hr /></td><td class="dep-version">0.2.4</td></tr><tr><td class="dep-name">webfui</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.4</td></tr><tr><td class="dep-name">shoreleave</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-remote-ring</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-remote</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">org.clojure/algo.generic</td><td class="dotted"><hr /></td><td class="dep-version">0.1.1</td></tr><tr><td class="dep-name">domina</td><td class="dotted"><hr /></td><td class="dep-version">1.0.1</td></tr><tr><td class="dep-name">org.clojure/algo.generic</td><td class="dotted"><hr /></td><td class="dep-version">0.1.1</td></tr><tr><td class="dep-name">org.clojure/google-closure-library-third-party</td><td class="dotted"><hr /></td><td class="dep-version">0.0-2029</td></tr><tr><td class="dep-name">swiss-arrows</td><td class="dotted"><hr /></td><td class="dep-version">0.6.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#mashup.config">mashup.config</a></li><li><a href="#mashup.core">mashup.core</a></li><li><a href="#mashup.github">mashup.github</a></li><li><a href="#mashup.handler">mashup.handler</a></li><li><a href="#mashup.remote">mashup.remote</a></li><li><a href="#mashup.services">mashup.services</a></li><li><a href="#mashup.twitter">mashup.twitter</a></li><li><a href="#mashup.utils.collection">mashup.utils.collection</a></li><li><a href="#mashup.utils.date">mashup.utils.date</a></li><li><a href="#mashup.utils.request">mashup.utils.request</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.config" name="mashup.config"><h1 class="project-name">mashup.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.config
   (:use [midje.sweet :only [facts fact]]))</pre></td></tr><tr><td class="docs"><h3>Configuration</h3>
 
@@ -3291,24 +3070,67 @@ be performed on github.</p>
        (fact &quot;twitter screen name exists&quot;
              tw-screen-name =&gt; string?)
        (fact &quot;github user name exists&quot;
-             github-user-name =&gt; string?))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.github" name="mashup.github"><h1 class="project-name">mashup.github</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Github Service</h3>
+             github-user-name =&gt; string?))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.core" name="mashup.core"><h1 class="project-name">mashup.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>The code in this ns retrieves the data in parallel for both the
+services - github and twitter.
+The data is then processed to include date for each item in three
+formats - day, month and year.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.core
+  (:use [clj-time.core :only [date-time]]
+        [midje.sweet :only [facts fact]]
+        [mashup.services :only [add-service exec-services]]
+        [mashup.utils.date :only [add-dates date-sorter]]
+        [mashup.utils.collection :only [group-by-key]])
+  (:require [mashup.config :as c]
+            [mashup.github :as gt]
+            [mashup.twitter :as tw]))</pre></td></tr><tr><td class="docs"><p>The one time processing of the data after it is fetched.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn pre-process
+  [coll]
+  (-&gt; coll
+      add-dates))</pre></td></tr><tr><td class="docs"><p>The manipulataion of the data based on the dt-type, everytime it is requested.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn post-process
+  [dt-type coll]
+  (-&gt; coll
+      (group-by-key dt-type)
+      date-sorter))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(post-process :year [{:year &quot;2012&quot;} {:year &quot;2010&quot;} {:year &quot;2011&quot;}])</pre></td></tr><tr><td class="docs"><p>Populating the service atom with the twitter and github services.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(add-service tw/srv)
+(add-service gt/srv)</pre></td></tr><tr><td class="docs"><h4>Fetch the data</h4>
+
+<p>The data is fetched and stored in an atom. This is to prevent the data being retrieved from the external API's multiple times.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def retrieved-data (atom nil))</pre></td></tr><tr><td class="docs"><p>Retrieves the data if true is provided as param or if the value of the atom is nil.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn fetch-it!
+  ([]
+     (fetch-it! false))
+  ([force]
+     (if (or force (nil? @retrieved-data))
+       (-&gt;&gt;
+        (exec-services)
+        pre-process
+        (reset! retrieved-data))
+       @retrieved-data)))</pre></td></tr><tr><td class="docs"><p>(facts "The fetch-it! function sucessfully retrieves data"
+       (data ))</p>
+</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.github" name="mashup.github"><h1 class="project-name">mashup.github</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Github Service</h3>
 
 <p>The below ns implements the service protocol for the github service.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.github
-  (:use [mashup.service-proto]
-        [midje.sweet :only [facts fact anything]]
+  (:use [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
-        [mashup.utils :only [parse-date]])
+        [mashup.utils.date :only [parse-date]])
   (:require [tentacles.events :as ev]
             [clj-time.format :as time]
             [mashup.config :as c]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def gt-date (parse-date :date-time-no-ms))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Parsing the date received from github&quot;
-      (gt-date &quot;2013-02-20T17:24:33Z&quot;) =&gt; (date-time 2013 02 20 17 24 33))</pre></td></tr><tr><td class="docs"><p>Fetches the user's events based on the user-name and page number (used for paginating through the events)</p>
+      (gt-date &quot;2013-02-20T17:24:33Z&quot;) =&gt; (date-time 2013 02 20 17 24 33))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def gt-config [c/github-user-name 1])</pre></td></tr><tr><td class="docs"><p>Fetches the user's events based on the user-name and page number (used for paginating through the events)</p>
 </td><td class="codes"><pre class="brush: clojure">(defn gt-fetch
-  [user page]
+  [[user page]]
   (ev/performed-events user {:page page}))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn gt-parse [events]
   (map (fn [event]
@@ -3318,7 +3140,7 @@ be performed on github.</p>
           :time (gt-date (:created_at event))})
        events))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(facts &quot;Fetching and parsing of github events&quot;
-       (let [events (gt-fetch c/github-user-name 1)]
+       (let [events (gt-fetch gt-config)]
          (fact &quot;The events fetched are a vector of maps&quot;
                events =&gt; #(and (vector? %) (map? (first %))))
          (fact &quot;Each event has the following keys&quot;
@@ -3330,13 +3152,8 @@ be performed on github.</p>
                                        (= :github (:source (first parsed-events)))
                                        (empty? (difference #{:source :type :repo :time} (-&gt; parsed-events first keys set))))))
          (fact &quot;Each parsed event has a time of type org.joda.time.DateTime&quot;
-               (-&gt; (gt-parse events) first) =&gt; #(-&gt; % :time type (= org.joda.time.DateTime)))))</pre></td></tr><tr><td class="docs"><p>The github serice object</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def github
-  (reify
-    Service
-    (fetch [this] (gt-fetch c/github-user-name 1))
-    (parse [this data] (gt-parse data))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.handler" name="mashup.handler"><h1 class="project-name">mashup.handler</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Ring Handlers</h3>
+               (-&gt; (gt-parse events) first) =&gt; #(-&gt; % :time type (= org.joda.time.DateTime)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def srv [gt-config [gt-fetch gt-parse]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.handler" name="mashup.handler"><h1 class="project-name">mashup.handler</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Ring Handlers</h3>
 
 <p>This ns defines the ring handlers.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
@@ -3345,7 +3162,7 @@ be performed on github.</p>
         [mashup.remote :only [fetch-data]]
         [ring.util.response :only [file-response]]
         [midje.sweet :only [facts fact]]
-        [mashup.utils :only [mock-req]])
+        [mashup.utils.request :only [mock-req]])
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
             [shoreleave.middleware.rpc :as rpc]))</pre></td></tr><tr><td class="docs"><p>The index page is an .html file in the file system that is served
@@ -3393,104 +3210,7 @@ will be displayed when the user request's the page.</p>
        (fact &quot;Shoreleave Route : Testing the fetch-data remote&quot;
              (req [:post &quot;/_shoreleave&quot; {:params [:month] :remote &quot;fetch-data&quot;}]) =&gt; (comp (partial = 202) :status))
        (fact &quot;Shoreleave Route : Testing the get-twitter-uname remote&quot;
-             (req [:post &quot;/_shoreleave&quot; {:remote &quot;get-twitter-uname&quot;}]) =&gt; (comp (partial = 202) :status)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.mashit" name="mashup.mashit"><h1 class="project-name">mashup.mashit</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>The code in this ns retrieves the data in parallel for both the
-services - github and twitter.
-The data is then processed to include date for each item in three
-formats - day, month and year.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.mashit
-  (:use [mashup.github :only [github]]
-        [mashup.twitter :only [twitter]]
-        [clojure.pprint :only [pprint]]
-        [clj-time.core :only [date-time year month day hour minute sec milli]]
-        [midje.sweet :only [facts fact]]
-        [clojure.set :only [difference]])
-  (:require [mashup.config :as c]
-            [mashup.service-proto :as p]))</pre></td></tr><tr><td class="docs"><p>The objects of the Service protocol.</p>
-</td><td class="codes"><pre class="brush: clojure">(def services [twitter github])</pre></td></tr><tr><td class="docs"><h3>Data Retrieval</h3>
-
-<p>A future is used to retrieve and parse the data in parallel for both
-the services. The resulting data is then dereferenced and
-concatenated.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Retrieve and parse the data in parallel using a future</p>
-</td><td class="codes"><pre class="brush: clojure">(defn get-data
-  []
-  (-&gt;&gt;
-   (map #(future
-            (-&gt;&gt; (p/fetch %)
-                 (p/parse %)))
-        services)
-   (map deref)
-   (apply concat)))</pre></td></tr><tr><td class="docs"><h3>Date Pocessing</h3>
-
-<p>The functions below deal with the processing of the date for each
-item.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Functions to be applied to create a string representation of the date.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def to-string-date-fns {:day [month day year] :month [month year] :year [year]})</pre></td></tr><tr><td class="docs"><p>Functions to be applied to floor the date.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def floor-date-fns {:day [day month year] :month [month year] :year [year]})</pre></td></tr><tr><td class="docs"><p>The date types for which a floored string representation of the date
-will be created.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def dt-types [:day :month :year])</pre></td></tr><tr><td class="docs"><p>Floors the given date based on the date type.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn floor-date
-  [dt-type dt]
-  (-&gt;&gt; (dt-type floor-date-fns)
-       (reverse)
-       (map #(% dt))
-       (apply date-time)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(facts &quot;Floors the given date to the given type&quot;
-       (fact &quot;Floors it to the year&quot;
-             (floor-date :year (date-time 2013 5 12 23 13)) =&gt; (date-time 2013))
-       (fact &quot;Floors it to the month&quot;
-             (floor-date :month (date-time 2013 5 12 23 13)) =&gt; (date-time 2013 5))
-       (fact &quot;Floors it to the day&quot;
-             (floor-date :day (date-time 2013 5 12 23 13)) =&gt; (date-time 2013 5 12)))</pre></td></tr><tr><td class="docs"><p>Creates a string representation of the date based on the given date and date type.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn get-date-string
-  [dt-type dt]
-  (let [fns (dt-type to-string-date-fns)]
-    (-&gt;&gt;
-     (map #(%1 dt) fns)
-     (interpose &quot;-&quot;)
-     (apply str))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(facts &quot;Converts the given date into string&quot;
-       (fact &quot;Returns a date string for the year&quot;
-             (get-date-string :year (date-time 2013 5 12)) =&gt; &quot;2013&quot;)
-       (fact &quot;Returns a date string for the month&quot;
-             (get-date-string :month (date-time 2013 5 12)) =&gt; &quot;5-2013&quot;)
-       (fact &quot;Returns a date string for the day&quot;
-             (get-date-string :day (date-time 2013 5 12)) =&gt; &quot;5-12-2013&quot;))</pre></td></tr><tr><td class="docs"><p>Floor the given date and return its string representation</p>
-</td><td class="codes"><pre class="brush: clojure">(defn floor-and-string-by-type
-  [dt-type date]
-  (-&gt;&gt;
-   date
-   (floor-date dt-type)
-   (get-date-string dt-type)
-   (hash-map dt-type)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(facts &quot;Given a date and type floor it and return its string represetation as a map&quot;
-      (let [v (floor-and-string-by-type :month (date-time 2013 12 5 6 12 21))]
-        (fact &quot;The return value is a map&quot;
-              v =&gt; map?)
-        (fact &quot;It has a count of one&quot;
-              (count v) =&gt; 1)
-        (fact &quot;The key is of the given dt-type&quot;
-              (-&gt; v keys first) =&gt; :month)
-        (fact &quot;The type of the value is string&quot;
-              (-&gt; v vals first type) =&gt; java.lang.String)))</pre></td></tr><tr><td class="docs"><p>assoc a string representation of date for each date type with the item.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn add-date-for-types
-  [{:keys [time] :as item}]
-  (-&gt;&gt;
-   (map #(floor-and-string-by-type % time) dt-types)
-   (reduce merge)
-   (merge item)))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(fact &quot;Given a map with a time key, it returns back a map with dates for all the keys.&quot;
-      (-&gt; {:time (date-time 2012 7 26 21 21 45)} add-date-for-types keys) =&gt; #(empty?
-                                                                               (difference (set dt-types) (set %))))
-m
-(defn fetch-it!</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn fetch-it!
-  []
-  (-&gt;&gt; (get-data) (map add-date-for-types)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.remote" name="mashup.remote"><h1 class="project-name">mashup.remote</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Remote API's</h3>
+             (req [:post &quot;/_shoreleave&quot; {:remote &quot;get-twitter-uname&quot;}]) =&gt; (comp (partial = 202) :status)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.remote" name="mashup.remote"><h1 class="project-name">mashup.remote</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Remote API's</h3>
 
 <p>This ns exposes the API calls that can be remotely called from the
 client. It uses the shoreleave library's defremote macro to expose
@@ -3499,148 +3219,95 @@ them at the _shoreleave url.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.remote
   (:use [shoreleave.middleware.rpc :only [defremote]]
-        [mashup.mashit :only [fetch-it!]]
+        [mashup.core :only [fetch-it! post-process]]
         [midje.sweet :only [facts fact]]
-        [clojure.set :only [subset? difference]]
-        [clojure.string :only [split]]
-        [clj-time.core :only [before?]]
-        [clojure.set :only [map-invert]]
-        [clj-time.core :only [date-time]]
-        [clojure.pprint :only [pprint]])
-  (:require [mashup.config :as config]))</pre></td></tr><tr><td class="docs"><h4>Fetch the data</h4>
-
-<p>The data is fetched and stored in a var. This is to prevent multiple
-calls to the server when the data is requested multiple times by the
-client.</p>
-</td><td class="codes"><pre class="brush: clojure">(def data (fetch-it!))</pre></td></tr><tr><td class="docs"><h3>Utility Functions</h3>
-
-<p>Functions for grouping, sorting and removing date instances from the data.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Groups the data based on the dt-type, ie either the day, month or the year key.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn group-data
-  [data dt-type]
-  (group-by #(%1 dt-type)
-            data))</pre></td></tr><tr><td class="docs"><p>Test if the data is grouped correctly.</p>
-</td><td class="codes"><pre class="brush: clojure">(facts &quot;Data is grouped by the given keys.&quot;
-       (let [grouped-data (group-data data :month)
-             months (map :month data)
-             grouped-by-keys (keys grouped-data)]
-         (fact &quot;The grouping keys are a subset of the :month/:day keys in data&quot;
-               [months grouped-by-keys] =&gt; (fn [[s1 s2]]
-                                             (subset? (set s1) (set s2))))
-         (fact &quot;All the grouping keys are distinct&quot;
-               grouped-by-keys =&gt; #(apply distinct? %))
-         (fact &quot;All the distinct keys from data are present in grouping keys&quot;
-               [months grouped-by-keys] =&gt; (fn [[s1 s2]]
-                                             (empty? (difference (set s1) (set s2)))))))</pre></td></tr><tr><td class="docs"><h4>Date Removal functionality</h4>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn dissoc-with-pred
-  [f]
-  (fn [m]
-    (into {} (filter (complement (fn [[k v]] (f k v))) m))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(fact &quot;returns a map with the keys dissoc whereever the pred is true&quot;
-      (let [greater-than-2 (dissoc-with-pred (fn [k v] (&gt; v 2)))]
-        (greater-than-2 {:a 3 :b 1 :c 7 :d 2}) =&gt; {:b 1 :d 2}))</pre></td></tr><tr><td class="docs"><p>dissoc any keys with the type of date-time</p>
-</td><td class="codes"><pre class="brush: clojure">(def dissoc-date-time
-  (dissoc-with-pred (fn [_ v] (= org.joda.time.DateTime (type v)))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(fact &quot;dissoc any keys having value of type org.joda.time.DateTime&quot;
-      (dissoc-date-time {:time (date-time 2013) :a 2 :b &quot;hello&quot;}) =&gt; #(every? (fn [[k v]] (not= (type v) org.joda.time.DateTime)) %))</pre></td></tr><tr><td class="docs"><h4>Sorting Functionality</h4>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Predicate function for comparing two date-time's</p>
-</td><td class="codes"><pre class="brush: clojure">(defn date-time-comparator
-  [time1 time2]
-  (before? time1 time2))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns true if the first date is chronologically before the second date.&quot;
-      (date-time-comparator (date-time 2011) (date-time 2013)) =&gt; true)</pre></td></tr><tr><td class="docs"><p>Function for extracting the date-time from the value of the given map.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn get-time-value
-  [v]
-  (-&gt; v first :time))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(fact &quot;Given [{:a 2 :time 3} {:time 4 :a 5}] returns the :time from the first map.&quot;
-      (get-time-value [{:a 2 :time 3} {:time 4 :a 5}]) =&gt; 3)</pre></td></tr><tr><td class="docs"><p>Given a map return a sorted map, in which the sort is done on the map's values, instead of keys.
-   Takes a function as an input, which will be used  for sorting
-   cf -> The comparator function
-   kf -> The key function which returns the value that is the be compared
-   m -> The map which has to be sorted</p>
-</td><td class="codes"><pre class="brush: clojure">(defn sort-map-by-value
-  [cf kf m]
-  (-&gt;&gt; m
-       map-invert
-       (into (sorted-map-by #(cf (kf %1) (kf %2))))
-       map-invert))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def sort-map-by-date (partial sort-map-by-value date-time-comparator get-time-value))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(fact &quot;Given an input as { 'ab' [ {:time (date-time ...)..} .. ] ..} sorts the map based on the time key of the first element.&quot;
-      (sort-map-by-date {&quot;3-19-2013&quot; [{:time (date-time 2013 3 19 12 14 45)}]
-                         &quot;3-9-2013&quot; [{:time (date-time 2013 3 9 16 46 49)}]
-                         &quot;2-25-2013&quot; [{:time (date-time 2013 2 25 2 38 15)}]
-                         &quot;3-14-2013&quot; [{:time (date-time 2013 3 14 7 19 23)}]
-                         &quot;2-8-2013&quot; [{:time (date-time 2013 2 8 12 44 47)}]}) =&gt; {&quot;3-19-2013&quot; [{:time (date-time 2013 3 19 12 14 45)}]
-                                                                                  &quot;3-14-2013&quot; [{:time (date-time 2013 3 14 7 19 23)}]
-                                                                                  &quot;3-9-2013&quot; [{:time (date-time 2013 3 9 16 46 49)}]
-                                                                                  &quot;2-25-2013&quot; [{:time (date-time 2013 2 25 2 38 15)}]
-                                                                                  &quot;2-8-2013&quot; [{:time (date-time 2013 2 8 12 44 47)}]})</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn remove-date
-  [data]
-  (-&gt;&gt;
-   (map (fn [[k v]]
-         (let [new-v (mapv dissoc-date-time v)]
-           {k new-v}))
-        data)
-   (into {})))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(fact &quot;Removes all date-time instances from the following data structure {k [{v}]}&quot;
-      (remove-date {:a [{:time (date-time 2012) :e 2} {:f 3}]}) =&gt; (fn [data]
-                                                                     (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
-                                                                             (-&gt; data vals first first))))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(pprint (remove-date (fetch-data :month)))</pre></td></tr><tr><td class="docs">
+        [clojure.algo.generic.functor :only [fmap]]
+        [mashup.utils.collection :only [dissoc-date-from-seq-of-maps]])
+  (:require [mashup.config :as config]))</pre></td></tr><tr><td class="docs"><p>The function below uses the diamond wand (-&lt;>), from the swiss-arrows lib. It has the default behavour of ->, however the threading position can optionally be fdefined using the &lt;> symbol. This is done in the last form.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>The function below does the following -
+1) Retrieve the data from the services.
+2) Group the data based on the given dt-key.
+3) Remove any date instances from the data (As they cause an error on the client side).
+4) Sort the maps.
+5) Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]
+In each vector the first element represents the date by which it was grouped, while the the second element is a vector of maps. Each map representing the item that was retrieved.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Returns the data retrieved from services as a vector of vectors.</p>
 </td><td class="codes"><pre class="brush: clojure">(defremote fetch-data
-  [dt-type]
-  (-&gt;
-   data
-   (group-data dt-type)
-   sort-map-by-date
-   remove-date))</pre></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(facts &quot;Checking the returned data&quot;
-       (fact &quot;The data is free of any instance of org.joda.time.DateTime&quot;
-             (fetch-data :month) =&gt; (fn [data]
-                                      (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
-                                              (-&gt; data vals first first))))
-       (fact &quot;The returned data is grouped&quot;
-             (fetch-data :day) =&gt; #(-&gt; % keys empty? not)))</pre></td></tr><tr><td class="docs">
+  [dt-key]
+  (-&gt;&gt;
+   (fetch-it!) ;; fetch the data from external io, and pre process it.
+   (post-process dt-key) ;; process the data based on the dt-key
+   (fmap dissoc-date-from-seq-of-maps) ;; fmap is used as it applies the f each value of the hash-map and preserves the structure.
+   (into [])))</pre></td></tr><tr><td class="docs"><p>(facts "Checking the fetched data"
+       (let [data (fetch-data :month)]
+         (fact "The data structure is a vector"
+               data => vector?)</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><pre><code>     ;; (fact "The data structure has no date instances"
+     ;;       data =&gt; (fn [d]
+     ;;                 (walk date? #(every? true? %) d)))
+     ))
+</code></pre>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>(fetch-data)
+(-> (fetch-data :day) pprint)</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>(facts "Checking the returned data"
+       (fact "The data is free of any instance of org.joda.time.DateTime"
+             {:ab {:a 2 :b 4}} => (fn [data]
+                                      (every? (fn [[k v]] (not= (type v) org.joda.time.DateTime))
+                                              (-> data vals first first))))
+       (fact "The returned data is grouped"
+             (fetch-data :day) => #(-> % keys empty? not)))</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defremote get-twitter-uname
   []
   config/tw-screen-name)</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns a string&quot;
-      (get-twitter-uname) =&gt; #(-&gt; % type (= java.lang.String)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.service-proto" name="mashup.service-proto"><h1 class="project-name">mashup.service-proto</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Service Protocol</h3>
+      (get-twitter-uname) =&gt; #(-&gt; % type (= java.lang.String)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.services" name="mashup.services"><h1 class="project-name">mashup.services</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.services
+  (:use [clojure.pprint :only [pprint]]
+        [midje.sweet :only [fact facts]]))</pre></td></tr><tr><td class="docs"><h3>Services Atom</h3>
 
-<p>The purpose of the service protocol is to provide an explicit
-contract that any service will have to implement, if it needs to be
-integrated in the mashup.</p>
+<p>The atom is a vector of vector. Each inner vector contains n number of func.
+The functions are defined in the sequence of their execution, with the output of the first passed as the input to the second.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.service-proto)</pre></td></tr><tr><td class="docs"><p>The protocol defines two methods -
-1) fetch for fetching of the data.
-2) parse for parsing of the fetched data.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defprotocol Service
-  (fetch [this] &quot;A way to connect to the API and fetch data&quot;)
-  (parse [this data] &quot;A way to parse the received data, and return it in a format for the data to be displayed.&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.twitter" name="mashup.twitter"><h1 class="project-name">mashup.twitter</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def services (atom []))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-service
+  [fns]
+  (swap! services conj fns))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn exec-services
+  ([] (exec-services @services))
+  ([v]
+     (-&gt;&gt;
+      (map (fn [[config fns]]
+              (future ((apply comp (reverse fns)) config)))
+            v)
+      (map deref)
+      (apply concat)
+      doall))) ;;using doall to force the lazy seq generated by map</pre></td></tr><tr><td class="docs"><p>using doall to force the lazy seq generated by map</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>(facts "C"
+      (let [s [[1 [inc]]
+               [2 [inc inc]]]]
+        (fact "c"
+              (exec-services [[1 [inc]]
+               [2 [inc inc]]]) => [2 3])))</p>
+</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.twitter" name="mashup.twitter"><h1 class="project-name">mashup.twitter</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.twitter
   (:use [twitter.oauth :only [make-oauth-creds]]
         [twitter.api.restful :only [statuses-user-timeline]]
         [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
-        [mashup.utils :only [parse-date]])
+        [mashup.utils.date :only [parse-date]])
   (:require [oauth.client :as oauth]
-            [mashup.config :as c]
-            [mashup.service-proto :as proto]))</pre></td></tr><tr><td class="docs">
+            [mashup.config :as c]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def tw-date (parse-date &quot;E MMM dd HH:mm:ss Z YYYY&quot;))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Able to parse the date received from twitter&quot;
       (tw-date &quot;Mon Feb 25 02:42:27 +0000 2013&quot;) =&gt; (date-time 2013 02 25 02 42 27))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def tw-config [c/tw-consumer-key c/tw-consumer-secret c/tw-access-token c/tw-access-secret])</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn make-creds
-  []
-  (make-oauth-creds c/tw-consumer-key
-                    c/tw-consumer-secret
-                    c/tw-access-token
-                    c/tw-access-secret))</pre></td></tr><tr><td class="docs">
+  [c]
+  (apply make-oauth-creds c))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns an object of type twitter.oauth.OauthCredentials&quot;
-      (make-creds) =&gt; #(-&gt; % type (= twitter.oauth.OauthCredentials)))</pre></td></tr><tr><td class="docs">
+      (make-creds tw-config) =&gt; #(-&gt; % type (= twitter.oauth.OauthCredentials)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn tw-fetch [oauth-creds]
   (statuses-user-timeline :oauth-creds oauth-creds))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn tw-parse [tweets]
@@ -3650,7 +3317,7 @@ integrated in the mashup.</p>
           :time (tw-date (:created_at tweet))})
        (:body tweets)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(facts &quot;Retreiving and parsing of tweets&quot;
-       (let [tweets (tw-fetch (make-creds))]
+       (let [tweets (tw-fetch (make-creds tw-config))]
          (fact &quot;The response has a status of 200&quot;
                (-&gt; tweets :status :code) =&gt; 200)
          (fact &quot;The tweets are in the body of the response as a vector of maps&quot;
@@ -3667,22 +3334,171 @@ integrated in the mashup.</p>
                                       (empty? (difference #{:source :text :time} (-&gt; parsed-tweets first keys set)))))
          (fact &quot;The parsed tweet has :time of type org.joda.time.DateTime&quot;
                (tw-parse tweets) =&gt; (fn [parsed-tweets]
-                                      (-&gt; parsed-tweets first :time type (= org.joda.time.DateTime))))))</pre></td></tr><tr><td class="docs"><p>The twitter service object</p>
+                                      (-&gt; parsed-tweets first :time type (= org.joda.time.DateTime))))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def srv [tw-config [make-creds tw-fetch tw-parse]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.collection" name="mashup.utils.collection"><h1 class="project-name">mashup.utils.collection</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.utils.collection
+  (:use [midje.sweet :only [facts fact]]
+        [clojure.set :only [map-invert difference]]
+        [clojure.algo.generic.functor :only [fmap]]
+        [clj-time.core :only [date-time]]))</pre></td></tr><tr><td class="docs"><p>Returns a function for sorted-map, given the comparator function, and andother function for processing the key.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn map-sorter
+  [cf kf]
+  (fn [m]
+    (into (sorted-map-by
+           (fn [k1 k2]
+             (cf (kf k1) (kf k2))))
+          m)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;mapsorter returns a fn which sorts a map based on the given comparator and key fns.&quot;
+      ((map-sorter &lt; identity) {2 :a 1 :b 3 :c}) =&gt; {1 :b 2 :a 3 :c})</pre></td></tr><tr><td class="docs"><p>maps f to each value in the keys collection ks. zips the result, with the key.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn map-and-zip
+  [f ks]
+  (fn [&amp; params]
+    (-&gt;&gt; (map #(f params %) ks)
+         (zipmap ks))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;maps f to the coll and returns the zipped results.&quot;
+      ((map-and-zip (fn [[p] k]
+                [p k])
+              [1 2 3])
+       5) =&gt; {3 [5 3] 2 [5 2] 1 [5 1]})</pre></td></tr><tr><td class="docs"><h3>Utility Functions</h3>
+
+<p>Functions for grouping, sorting and removing date instances from the data.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Given a collection of maps, returns a collection with maps grouped using the value of the supplied key.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn group-by-key
+  [coll k]
+  (group-by #(%1 k) coll))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(group-by-key [{:a 1 :b 2} {:a 3 :b 4} {:a 1 :b 5}] :a)</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Groups the coll of maps by the given key&quot;
+      (group-by-key [{:a 1 :b 2} {:a 3 :b 4} {:a 1 :b 5}] :a) =&gt; {1 [{:a 1, :b 2} {:a 1, :b 5}], 3 [{:a 3, :b 4}]})</pre></td></tr><tr><td class="docs"><h4>Date Removal functionality</h4>
 </td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def twitter
-  (reify
-    proto/Service
-    (fetch [this] (-&gt; (make-creds) tw-fetch))
-    (parse [this data] (tw-parse data))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils" name="mashup.utils"><h1 class="project-name">mashup.utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.utils
-  (:use [clj-time.format :only [parse formatter formatters]]
-        [ring.mock.request :only [request]]))</pre></td></tr><tr><td class="docs"><p>Returns a date parser based on the formatter</p>
+</td><td class="codes"><pre class="brush: clojure">(defn dissoc-with-pred
+  [f]
+  (fn [m]
+    (into {} (filter (complement (fn [[k v]] (f k v))) m))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;returns a map with the keys dissoc where the pred is true&quot;
+      (let [greater-than-2 (dissoc-with-pred (fn [k v] (&gt; v 2)))]
+        (greater-than-2 {:a 3 :b 1 :c 7 :d 2}) =&gt; {:b 1 :d 2}))</pre></td></tr><tr><td class="docs"><p>dissoc any keys with the type of date-time</p>
+</td><td class="codes"><pre class="brush: clojure">(def dissoc-date-time
+  (dissoc-with-pred (fn [_ v] (= org.joda.time.DateTime (type v)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;dissoc any keys having value of type org.joda.time.DateTime&quot;
+      (dissoc-date-time {:time (date-time 2013) :a 2 :b &quot;hello&quot;}) =&gt; #(every? (fn [[k v]] (not= (type v) org.joda.time.DateTime)) %))</pre></td></tr><tr><td class="docs"><h4>Sorting Functionality</h4>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn dissoc-from-seq-of-maps
+  [dissoc-map-fn]
+  (fn [s]
+    (mapv dissoc-map-fn s)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def dissoc-date-from-seq-of-maps (dissoc-from-seq-of-maps dissoc-date-time))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(dissoc-date-from-seq-of-maps [{:time (date-time 2012) :e 2} {:f 3 :hey-man (date-time 2111)}])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Removes all date-time instances from the following data structure {k [{v}]}&quot;
+      (fmap dissoc-date-from-seq-of-maps {:a [{:time (date-time 2012) :e 2} {:f 3}]
+                    :b [{:time (date-time 2013) :h 5}]}) =&gt; (fn [data]
+                                                                     (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
+                                                                             (-&gt; data vals first first))))</pre></td></tr><tr><td class="docs"><p>Function for extracting the date-time from the value of the given vector of maps.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-val-from-first
+  [key s]
+  (-&gt; s first key))</pre></td></tr><tr><td class="docs"><p>Applies f to each ahsh-map of the seq s, and then merges both.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn apply-and-merge
+  [f]
+  (fn [s]
+    (map #(-&gt; (f %)
+              (merge %))
+         s)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Applies f and returns the merged map.&quot;
+      ((apply-and-merge #(-&gt;&gt; (:a %) inc (hash-map :a-inc))) [{:a 1 :b 2}]) =&gt; [{:a-inc 2 :a 1 :b 2}])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.date" name="mashup.utils.date"><h1 class="project-name">mashup.utils.date</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.utils.date
+  (:use [clj-time.format :only [unparse parse formatter formatters]]
+        [clj-time.core :only [default-time-zone date-midnight date-time year month day hour minute sec milli after?]]
+        [midje.sweet :only [facts fact]]
+        [mashup.utils.collection :only [map-sorter map-and-zip apply-and-merge]]
+        [clojure.set :only [difference]]))</pre></td></tr><tr><td class="docs"><p>Returns true if the type of the arg is of org.joda.time.DateTime</p>
+
+<p>Predicate fn to test of the given arg is of type org.joda.time.DateTime.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn date?
+  [v]
+  (= (type v) org.joda.time.DateTime))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns true if the type of the arg is of org.joda.time.DateTime&quot;
+      (date? (date-time 2012 2 3 4)) =&gt; true
+      (date? &quot;2012&quot;) =&gt; false
+      (date? 2012) =&gt; false)</pre></td></tr><tr><td class="docs"><p>Parses a given date given a format and a date. clj-time accepts two types of formatters, string and keywords. The below fn provides a uniform interface for invoking both.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Returns a date parser based on the format. Format can be either a custom string or clj-time keyword.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn parse-date
   [format]
   (fn [date-string]
-    (if (keyword? format)
-      (parse (formatters format) date-string)
-      (parse (formatter format) date-string))))</pre></td></tr><tr><td class="docs"><p>Utility function for creating a mock request</p>
+    (cond
+     (keyword? format) (parse (formatters format) date-string)
+     (string? format) (parse (formatter format) date-string))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(facts &quot;Parses a date with a given formatter&quot;
+       (fact &quot;Parses with an clj-time keyword formatter&quot;
+             ((parse-date :year) &quot;2012&quot;) =&gt; date?)
+       (fact &quot;Parses with a custom string formatter&quot;
+             ((parse-date &quot;MM-dd-YY&quot;) &quot;05-26-13&quot;) =&gt; date?))</pre></td></tr><tr><td class="docs"><p>Date fns corresponding to the dt-type.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def date-fn {:day day :month month :year year :hour hour :minute minute :sec sec :milli milli})</pre></td></tr><tr><td class="docs"><p>Returns a seq of clj-time date fns, given a dt-type.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-date-fns
+  [dt-key]
+  (let [f (dt-key date-fn)]
+    (-&gt; (take-while (partial not= f) [year month day hour minute sec milli])
+        reverse
+        (conj f))))</pre></td></tr><tr><td class="docs"><p>Floors the date based on the given dt-type.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn floor-date
+  [dt-type date]
+  (-&gt;&gt; (get-date-fns dt-type)
+       (map #(% date))
+       reverse
+       (apply date-midnight)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(facts &quot;Floors the given date based on the given type&quot;
+       (fact &quot;Floors it to the year&quot;
+             (floor-date :year (date-time 2013 5 12 23 13)) =&gt; (date-midnight 2013))
+       (fact &quot;Floors it to the month&quot;
+             (floor-date :month (date-time 2013 5 12 23 13)) =&gt; (date-midnight 2013 5))
+       (fact &quot;Floors it to the day&quot;
+             (floor-date :day (date-time 2013 5 12 23 13)) =&gt; (date-midnight 2013 5 12)))</pre></td></tr><tr><td class="docs"><p>Custom formatters that are needed for converting a date into a string. The given clj-time formatter are used where applicable (:year), and string ones are specified where needed (:day and :month).</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def custom-formatters {:day &quot;MM-dd-YYYY&quot; :month &quot;MM-YYYY&quot; :year :year})</pre></td></tr><tr><td class="docs"><p>Returns the string representation of a date given the formatter.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn unparse-date
+  [format date]
+  (cond
+   (keyword? format) (unparse (formatters format) date)
+   (string? format) (unparse (formatter format) date)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(facts &quot;Converts the given date into string&quot;
+       (fact &quot;Returns a date string for the year&quot;
+             (unparse-date (:year custom-formatters) (date-time 2013 5 12)) =&gt; &quot;2013&quot;)
+       (fact &quot;Returns a date string for the month&quot;
+             (unparse-date (:month custom-formatters) (date-time 2013 5 12)) =&gt; &quot;05-2013&quot;)
+       (fact &quot;Returns a date string for the day&quot;
+             (unparse-date (:day custom-formatters) (date-time 2013 5 12)) =&gt; &quot;05-12-2013&quot;))</pre></td></tr><tr><td class="docs"><p>Floors and returns the string representation given the date and dt-type.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn floor-and-string
+  [[date] dt-type]
+  (-&gt;&gt; (floor-date dt-type date)
+       (unparse-date (dt-type custom-formatters))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(facts &quot;Given a date and type, floor it and return its string represetation.&quot;
+       (let [v (floor-and-string [(date-time 2013 12 5 6 12 21)] :month)]
+        (fact &quot;The type of the value is string&quot;
+              (type v) =&gt; java.lang.String)))</pre></td></tr><tr><td class="docs"><p>Predicate function for comparing two date-time's</p>
+</td><td class="codes"><pre class="brush: clojure">(defn date-time-comparator
+  [time1 time2]
+  (after? time1 time2))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns true if the first date is chronologically after the second date.&quot;
+      (date-time-comparator (date-time 2013) (date-time 2011)) =&gt; true)</pre></td></tr><tr><td class="docs"><p>clj-time formatter which can be used for specifying formats for all the three date strings.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def multi-parser (formatter (default-time-zone) &quot;MM-dd-YYYY&quot; &quot;MM-YYYY&quot; &quot;YYYY&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(facts &quot;The multi-parse can be used as a formatter to parse dates in day, month and year formats.&quot;
+       (fact &quot;It can parse a date in YYYY format&quot;
+             (parse multi-parser &quot;2012&quot;) =&gt; date?))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def date-sorter (map-sorter date-time-comparator #(parse multi-parser %)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Sorts a map in which the keys are date strings.&quot;
+      (date-sorter {&quot;2012&quot; 2 &quot;2011&quot; 3 &quot;2013&quot; 1}) =&gt; {&quot;2011&quot; 3 &quot;2012&quot; 2 &quot;2013&quot; 1}
+      (date-sorter {&quot;03-2013&quot; 2 &quot;01-2013&quot; 3 &quot;02-2013&quot; 1}) =&gt; {&quot;03-2013&quot; 2 &quot;01-2013&quot; 3 &quot;02-2013&quot; 1})</pre></td></tr><tr><td class="docs"><p>The date types which will be added to each item.</p>
+</td><td class="codes"><pre class="brush: clojure">(def dt-types [:day :month :year])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def make-date-strings (map-and-zip floor-and-string dt-types))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns a hash-map with keys for each dt-type&quot;
+      (make-date-strings (date-time 2011 2 3 4 5)) =&gt; {:year &quot;2011&quot; :month &quot;02-2011&quot; :day &quot;02-03-2011&quot;})</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def add-dates (apply-and-merge #(make-date-strings (:time %))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Adds date strings for each dt-type to each map&quot;
+      (add-dates [{:a 2 :time (date-time 2011)} {:b 3 :time (date-time 2010)}]) =&gt; (fn [s]
+                                                                                     (empty? (difference (into #{} dt-types) (set (keys (first s)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.request" name="mashup.utils.request"><h1 class="project-name">mashup.utils.request</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.utils.request
+  (:use [ring.mock.request :only [request]]
+        [midje.sweet :only [facts fact]]))</pre></td></tr><tr><td class="docs"><p>Utility function for creating a mock request</p>
 </td><td class="codes"><pre class="brush: clojure">(defn mock-req
   [app-routes]
   (fn [[verb url &amp; params]]
