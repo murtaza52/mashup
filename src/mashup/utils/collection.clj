@@ -4,33 +4,44 @@
         [clojure.algo.generic.functor :only [fmap]]
         [clj-time.core :only [date-time]]))
 
+
+(defn map-sorter
+  "Returns a function for sorted-map, given the comparator function, and andother function for processing the key."
+  [cf kf]
+  (fn [m]
+    (into (sorted-map-by
+           (fn [k1 k2]
+             (cf (kf k1) (kf k2))))
+          m)))
+
+(fact "mapsorter returns a fn which sorts a map based on the given comparator and key fns."
+      ((map-sorter < identity) {2 :a 1 :b 3 :c}) => {1 :b 2 :a 3 :c})
+
 (defn map-and-zip
+  "maps f to each value in the keys collection ks. zips the result, with the key."
   [f ks]
   (fn [& params]
     (->> (map #(f params %) ks)
          (zipmap ks))))
+
+(fact "maps f to the coll and returns the zipped results."
+      ((map-and-zip (fn [[p] k]
+                [p k])
+              [1 2 3])
+       5) => {3 [5 3] 2 [5 2] 1 [5 1]})
 
 ;; ### Utility Functions
 ;; Functions for grouping, sorting and removing date instances from the data.
 
 (defn group-by-key
   "Given a collection of maps, returns a collection with maps grouped using the value of the supplied key."
-  [data key]
-  (group-by #(%1 key) data))
+  [coll k]
+  (group-by #(%1 k) coll))
 
-;; ;; Test if the data is grouped correctly.
-;; (facts "Data is grouped by the given keys."
-;;        (let [grouped-data (group-data (fetch-it! false) :month)
-;;              months (map :month (fetch-it! false))
-;;              grouped-by-keys (keys grouped-data)]
-;;          (fact "The grouping keys are a subset of the :month/:day keys in data"
-;;                [months grouped-by-keys] => (fn [[s1 s2]]
-;;                                              (subset? (set s1) (set s2))))
-;;          (fact "All the grouping keys are distinct"
-;;                grouped-by-keys => #(apply distinct? %))
-;;          (fact "All the distinct keys from data are present in grouping keys"
-;;                [months grouped-by-keys] => (fn [[s1 s2]]
-;;                                              (empty? (difference (set s1) (set s2)))))))
+(group-by-key [{:a 1 :b 2} {:a 3 :b 4} {:a 1 :b 5}] :a)
+
+(fact "Groups the coll of maps by the given key"
+      (group-by-key [{:a 1 :b 2} {:a 3 :b 4} {:a 1 :b 5}] :a) => {1 [{:a 1, :b 2} {:a 1, :b 5}], 3 [{:a 3, :b 4}]})
 
 ;; #### Date Removal functionality
 
@@ -39,7 +50,7 @@
   (fn [m]
     (into {} (filter (complement (fn [[k v]] (f k v))) m))))
 
-(fact "returns a map with the keys dissoc whereever the pred is true"
+(fact "returns a map with the keys dissoc where the pred is true"
       (let [greater-than-2 (dissoc-with-pred (fn [k v] (> v 2)))]
         (greater-than-2 {:a 3 :b 1 :c 7 :d 2}) => {:b 1 :d 2}))
 
@@ -51,30 +62,6 @@
       (dissoc-date-time {:time (date-time 2013) :a 2 :b "hello"}) => #(every? (fn [[k v]] (not= (type v) org.joda.time.DateTime)) %))
 
 ;; #### Sorting Functionality
-
-(defn sort-map-by-value
-  "Given a map return a sorted map, in which the sort is done on the map's values, instead of keys.
-   Takes a function as an input, which will be used  for sorting
-   cf -> The comparator function
-   kf -> The key function which returns the value that is the be compared
-   m -> The map which has to be sorted"
-  [cf]
-  (fn [kf m]
-    (->> m
-       map-invert
-       (into (sorted-map-by #(cf (kf %1) (kf %2))))
-       map-invert)))
-
-;; (fact "Given an input as { 'ab' [ {:time (date-time ...)..} .. ] ..} sorts the map based on the time key of the first element."
-;;       (sort-map-by-date {"3-19-2013" [{:time (date-time 2013 3 19 12 14 45)}]
-;;                          "3-9-2013" [{:time (date-time 2013 3 9 16 46 49)}]
-;;                          "2-25-2013" [{:time (date-time 2013 2 25 2 38 15)}]
-;;                          "3-14-2013" [{:time (date-time 2013 3 14 7 19 23)}]
-;;                          "2-8-2013" [{:time (date-time 2013 2 8 12 44 47)}]}) => {"3-19-2013" [{:time (date-time 2013 3 19 12 14 45)}]
-;;                                                                                   "3-14-2013" [{:time (date-time 2013 3 14 7 19 23)}]
-;;                                                                                   "3-9-2013" [{:time (date-time 2013 3 9 16 46 49)}]
-;;                                                                                   "2-25-2013" [{:time (date-time 2013 2 25 2 38 15)}]
-;;                                                                                   "2-8-2013" [{:time (date-time 2013 2 8 12 44 47)}]})
 
 (defn dissoc-from-seq-of-maps
   [dissoc-map-fn]
@@ -92,8 +79,19 @@
                                                                      (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
                                                                              (-> data vals first first))))
 
-
 (defn get-val-from-first
   "Function for extracting the date-time from the value of the given vector of maps."
   [key s]
   (-> s first key))
+
+
+(defn apply-and-merge
+  "Applies f to each ahsh-map of the seq s, and then merges both."
+  [f]
+  (fn [s]
+    (map #(-> (f %)
+              (merge %))
+         s)))
+
+(fact "Applies f and returns the merged map."
+      ((apply-and-merge #(->> (:a %) inc (hash-map :a-inc))) [{:a 1 :b 2}]) => [{:a-inc 2 :a 1 :b 2}])

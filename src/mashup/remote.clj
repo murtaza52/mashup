@@ -6,50 +6,43 @@
 
 (ns mashup.remote
   (:use [shoreleave.middleware.rpc :only [defremote]]
-        [mashup.core :only [fetch-it!]]
+        [mashup.core :only [fetch-it! post-process]]
         [midje.sweet :only [facts fact]]
-        [mashup.utils.date :only [date-time-comparator multi-parser]]
-        [mashup.utils.collection :only [group-by-key dissoc-date-from-seq-of-maps]]
-        [clj-time.format :only [parse]]
-        [clojure.pprint :only [pprint]]
-        [swiss-arrows.core :only [-<>]]
-        [clojure.algo.generic.functor :only [fmap]])
+        [clojure.algo.generic.functor :only [fmap]]
+        [mashup.utils.collection :only [dissoc-date-from-seq-of-maps]])
   (:require [mashup.config :as config]))
 
-;; (def get-time-value (partial get-val-from-first :time))
-
-;; (fact "Given [{:a 2 :time 3} {:time 4 :a 5}] returns the :time from the first map."
-;;       (get-time-value [{:a 2 :time 3} {:time 4 :a 5}]) => 3)
-
-;; ;;(def sorter (partial sort-map-by-date get-time-value))
-
-(defn map-sorter
-  [cf kf]
-  (fn [m]
-    (into (sorted-map-by
-           (fn [k1 k2]
-             (cf (kf k1) (kf k2))))
-          m)))
-
-(def date-sorter (map-sorter date-time-comparator #(parse multi-parser %)))
-
-(date-sorter {"2012" 2 "2011" 3 "2013" 1})
-
-(into (sorted-map-by
-       (fn [k1 k2]
-         (date-time-comparator (parse multi-parser k1) (parse multi-parser k2))))
-      {"2012" 2 "2011" 3 "2013" 1})
 
 ;; The function below uses the diamond wand (-<>), from the swiss-arrows lib. It has the default behavour of ->, however the threading position can optionally be fdefined using the <> symbol. This is done in the last form.
-(defremote fetch-data
-  [dt-key]
-  (-<>
-   (fetch-it! false)
-   (group-by-key dt-key)
-   (fmap dissoc-date-from-seq-of-maps <>)
-   date-sorter
-   (into [] <>)))
 
+;; The function below does the following -
+;; 1) Retrieve the data from the services.
+;; 2) Group the data based on the given dt-key.
+;; 3) Remove any date instances from the data (As they cause an error on the client side).
+;; 4) Sort the maps.
+;; 5) Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]
+;; In each vector the first element represents the date by which it was grouped, while the the second element is a vector of maps. Each map representing the item that was retrieved.
+
+(defremote fetch-data
+  "Returns the data retrieved from services as a vector of vectors."
+  [dt-key]
+  (->>
+   (fetch-it!) ;; fetch the data from external io, and pre process it.
+   (post-process dt-key) ;; process the data based on the dt-key
+   (fmap dissoc-date-from-seq-of-maps) ;; fmap is used as it applies the f each value of the hash-map and preserves the structure.
+   (into [])))
+
+;; (facts "Checking the fetched data"
+;;        (let [data (fetch-data :month)]
+;;          (fact "The data structure is a vector"
+;;                data => vector?)
+
+;;          ;; (fact "The data structure has no date instances"
+;;          ;;       data => (fn [d]
+;;          ;;                 (walk date? #(every? true? %) d)))
+;;          ))
+
+;;(fetch-data)
 ;(-> (fetch-data :day) pprint)
 
 ;; (facts "Checking the returned data"

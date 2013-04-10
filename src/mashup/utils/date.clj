@@ -2,10 +2,10 @@
   (:use [clj-time.format :only [unparse parse formatter formatters]]
         [clj-time.core :only [default-time-zone date-midnight date-time year month day hour minute sec milli after?]]
         [midje.sweet :only [facts fact]]
+        [mashup.utils.collection :only [map-sorter map-and-zip apply-and-merge]]
         [clojure.set :only [difference]]))
 
 ;; Predicate fn to test of the given arg is of type org.joda.time.DateTime.
-
 (defn date?
   "Returns true if the type of the arg is of org.joda.time.DateTime"
   [v]
@@ -19,55 +19,27 @@
 ;; Parses a given date given a format and a date. clj-time accepts two types of formatters, string and keywords. The below fn provides a uniform interface for invoking both.
 
 (defn parse-date
-  "Returns a date parser based on the formatter"
+  "Returns a date parser based on the format. Format can be either a custom string or clj-time keyword."
   [format]
   (fn [date-string]
     (cond
      (keyword? format) (parse (formatters format) date-string)
      (string? format) (parse (formatter format) date-string))))
 
-;; ### Date Processing
-;; The functions below deal with the processing of the date for each
-;; item.
+(facts "Parses a date with a given formatter"
+       (fact "Parses with an clj-time keyword formatter"
+             ((parse-date :year) "2012") => date?)
+       (fact "Parses with a custom string formatter"
+             ((parse-date "MM-dd-YY") "05-26-13") => date?))
 
-;; Functions to be applied to create a string representation of the date.
-
-;; (def to-string-date-fns {:day [month day year] :month [month year] :year [year]})
-
-;; ;; Functions to be applied to floor the date.
-
-;; (def floor-date-fns {:day [day month year] :month [month year] :year [year]})
-
-;; (defn floor-date
-;;   "Floors the given date based on the date type."
-;;   [dt-type dt]
-;;   (->> (dt-type floor-date-fns)
-;;        (reverse)
-;;        (map #(% dt))
-;;        (apply date-time)))
-
-;; (facts "Floors the given date based on the given type"
-;;        (fact "Floors it to the year"
-;;              (floor-date :year (date-time 2013 5 12 23 13)) => (date-time 2013))
-;;        (fact "Floors it to the month"
-;;              (floor-date :month (date-time 2013 5 12 23 13)) => (date-time 2013 5))
-;;        (fact "Floors it to the day"
-;;              (floor-date :day (date-time 2013 5 12 23 13)) => (date-time 2013 5 12)))
-
-;; (defn stringify-date
-;;   "Creates a string representation of the date based on the given date and date type."
-;;   [dt-type dt]
-;;   (let [fns (dt-type to-string-date-fns)]
-;;     (->>
-;;      (map #(%1 dt) fns)
-;;      (interpose "-")
-;;      (apply str))))
+;; Date fns corresponding to the dt-type.
 
 (def date-fn {:day day :month month :year year :hour hour :minute minute :sec sec :milli milli})
 
 (defn get-date-fns
-  [k]
-  (let [f (k date-fn)]
+  "Returns a seq of clj-time date fns, given a dt-type."
+  [dt-key]
+  (let [f (dt-key date-fn)]
     (-> (take-while (partial not= f) [year month day hour minute sec milli])
         reverse
         (conj f))))
@@ -126,12 +98,30 @@
 (fact "Returns true if the first date is chronologically after the second date."
       (date-time-comparator (date-time 2013) (date-time 2011)) => true)
 
+;; clj-time formatter which can be used for specifying formats for all the three date strings.
+
 (def multi-parser (formatter (default-time-zone) "MM-dd-YYYY" "MM-YYYY" "YYYY"))
 
 (facts "The multi-parse can be used as a formatter to parse dates in day, month and year formats."
        (fact "It can parse a date in YYYY format"
              (parse multi-parser "2012") => date?))
 
-;; (fact "Given a map with a time key, it returns back a map with dates for all the dt-types."
-;;       (-> (add-date-strings {:a 2} (date-time 2012)) keys) => #(empty?
-;;                                                                 (difference (set dt-types) (set %))))
+(def date-sorter (map-sorter date-time-comparator #(parse multi-parser %)))
+
+(fact "Sorts a map in which the keys are date strings."
+      (date-sorter {"2012" 2 "2011" 3 "2013" 1}) => {"2011" 3 "2012" 2 "2013" 1}
+      (date-sorter {"03-2013" 2 "01-2013" 3 "02-2013" 1}) => {"03-2013" 2 "01-2013" 3 "02-2013" 1})
+
+;; The date types which will be added to each item.
+(def dt-types [:day :month :year])
+
+(def make-date-strings (map-and-zip floor-and-string dt-types))
+
+(fact "Returns a hash-map with keys for each dt-type"
+      (make-date-strings (date-time 2011 2 3 4 5)) => {:year "2011" :month "02-2011" :day "02-03-2011"})
+
+(def add-dates (apply-and-merge #(make-date-strings (:time %))))
+
+(fact "Adds date strings for each dt-type to each map"
+      (add-dates [{:a 2 :time (date-time 2011)} {:b 3 :time (date-time 2010)}]) => (fn [s]
+                                                                                     (empty? (difference (into #{} dt-types) (set (keys (first s)))))))
