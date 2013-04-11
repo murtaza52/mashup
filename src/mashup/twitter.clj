@@ -1,3 +1,7 @@
+;; ### Twitter Service
+;; This ns contains the functions for fetching and parsing the data retrieved from twitter.
+;; It also defines the config var for adding to the services atom.
+
 (ns mashup.twitter
   (:use [twitter.oauth :only [make-oauth-creds]]
         [twitter.api.restful :only [statuses-user-timeline]]
@@ -8,26 +12,35 @@
   (:require [oauth.client :as oauth]
             [mashup.config :as c]))
 
+;; fn for parsing the date for each tweet.
+
 (def tw-date (parse-date "E MMM dd HH:mm:ss Z YYYY"))
 
 (fact "Able to parse the date received from twitter"
       (tw-date "Mon Feb 25 02:42:27 +0000 2013") => (date-time 2013 02 25 02 42 27))
 
+;; The twitter configuration for connecting to its API.
+
 (defn tw-config
   []
   (vector c/tw-consumer-key c/tw-consumer-secret c/tw-access-token c/tw-access-secret))
 
-(defn make-creds
+(defn make-cred
+  "returns oauth cred that can be used to connect to twitter."
   [c]
   (apply make-oauth-creds c))
 
 (fact "Returns an object of type twitter.oauth.OauthCredentials"
       (make-creds (tw-config)) => #(instance? twitter.oauth.OauthCredentials %))
 
-(defn tw-fetch [oauth-creds]
+(defn tw-fetch
+  "Fetches tweets of a user given the uath credentials."
+  [oauth-creds]
   (statuses-user-timeline :oauth-creds oauth-creds))
 
-(defn tw-parse [tweets]
+(defn tw-parse
+  "Parses the tweets into a collection of maps."
+  [tweets]
   (map (fn[tweet]
          {:source :twitter
           :text (:text tweet)
@@ -53,5 +66,7 @@
          (fact "The parsed tweet has :time of type org.joda.time.DateTime"
                (tw-parse tweets) => (fn [parsed-tweets]
                                       (-> parsed-tweets first :time date?)))))
+
+;; The config vector that will be used by the exec-services fn.
 
 (def srv [tw-config make-creds tw-fetch tw-parse])

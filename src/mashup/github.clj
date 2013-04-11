@@ -11,13 +11,14 @@
             [clj-time.format :as time]
             [mashup.config :as c]))
 
-;; fn to be used for parsing the date received from each github event.
+;; fn for parsing the date for each github event.
+
 (def gt-date (parse-date :date-time-no-ms))
 
 (fact "Parsing the date received from github"
       (gt-date "2013-02-20T17:24:33Z") => (date-time 2013 02 20 17 24 33))
 
-;; The github configuration for conneting to its API.
+;; The github configuration for connecting to its API.
 
 (defn gt-config
   []

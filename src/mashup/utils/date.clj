@@ -98,13 +98,13 @@
       (date-time-comparator (date-time 2013) (date-time 2011)) => true)
 
 ;; clj-time formatter which can be used for specifying formats for all the three date strings.
-
 (def multi-parser (formatter (default-time-zone) "MM-dd-YYYY" "MM-YYYY" "YYYY"))
 
 (facts "The multi-parse can be used as a formatter to parse dates in day, month and year formats."
        (fact "It can parse a date in YYYY format"
              (parse multi-parser "2012") => date?))
 
+;; fn for sorting a map based on the string date keys.
 (def date-sorter (map-sorter date-time-comparator #(parse multi-parser %)))
 
 (fact "Sorts a map in which the keys are date strings."
@@ -114,11 +114,13 @@
 ;; The date types which will be added to each item.
 (def dt-types [:day :month :year])
 
+;; fn for creating floored date strings for each dt type
 (def make-date-strings (mapz floor-and-string dt-types))
 
 (fact "Returns a hash-map with keys for each dt-type"
       (make-date-strings (date-time 2011 2 3 4 5)) => {:year "2011" :month "02-2011" :day "02-03-2011"})
 
+;; fn for adding the date strings to a map
 (def add-dates (partial fmerge #(make-date-strings (:time %))))
 
 (fact "Adds date strings for each dt-type to each map"

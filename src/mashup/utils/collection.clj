@@ -56,8 +56,6 @@
   [coll k]
   (group-by #(%1 k) coll))
 
-(group-by-key [{:a 1 :b 2} {:a 3 :b 4} {:a 1 :b 5}] :a)
-
 (fact "Groups the coll of maps by the given key"
       (group-by-key [{:a 1 :b 2} {:a 3 :b 4} {:a 1 :b 5}] :a) => {1 [{:a 1, :b 2} {:a 1, :b 5}], 3 [{:a 3, :b 4}]})
 
