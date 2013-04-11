@@ -68,16 +68,16 @@ to the authors of the following libs-
 - domina - For providing a native way to manipulate the dom.
 - cljsbuild - For making clojurescript compilation effortless.
 - pedantic - For making it possible to discover conflicting dependencies.
-- clojure.core - For developing clojure itself !!!
+- clojure.core - For giving us a platform called clojure!!!
 
 Open Source Rocks and Clojure Rocks Open Source !!!
 
 ## Acknowledgements
 
 I did ask a lot of questions on stackoverflow, and am thankful to the
-numerous authors who shared their knowledge with me !
+numerous authors who shared their knowledge with me ! A lot of code, patterns and revisions would not have been possible without their help.
 
-Also a big thanks to the guys at
+[http://stackoverflow.com/users/1345376/murtaza52?tab=questions] The questions that have been asked can be [checked here].
 
 ## Known Bugs
 
@@ -85,7 +85,6 @@ Yes even shiny new porjects have them -
 
 1. The day button should be pressed when the page loads. Currently
 unable to execute the js needed for this.
-2. The sorting doesnt work. Unable to trace the reason at this point :(
 
 ## License
 

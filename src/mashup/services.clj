@@ -10,15 +10,16 @@
 (def services (atom []))
 
 (defn add-service
-  [fns]
-  (swap! services conj fns))
+  "conjs the input coll to the atom vector."
+  [coll]
+  (swap! services conj coll))
 
 (defn exec-services
   ([] (exec-services @services))
   ([v]
      (->>
-      (map (fn [[config fns]]
-              (future ((apply comp (reverse fns)) config)))
+      (map (fn [coll]
+              (future ((apply comp (reverse coll)))))
             v)
       (map deref)
       (apply concat)
