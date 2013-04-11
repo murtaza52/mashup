@@ -4,7 +4,7 @@
         [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
-        [mashup.utils.date :only [parse-date]])
+        [mashup.utils.date :only [parse-date date?]])
   (:require [oauth.client :as oauth]
             [mashup.config :as c]))
 
@@ -13,14 +13,16 @@
 (fact "Able to parse the date received from twitter"
       (tw-date "Mon Feb 25 02:42:27 +0000 2013") => (date-time 2013 02 25 02 42 27))
 
-(def tw-config [c/tw-consumer-key c/tw-consumer-secret c/tw-access-token c/tw-access-secret])
+(defn tw-config
+  []
+  (vector c/tw-consumer-key c/tw-consumer-secret c/tw-access-token c/tw-access-secret))
 
 (defn make-creds
   [c]
   (apply make-oauth-creds c))
 
 (fact "Returns an object of type twitter.oauth.OauthCredentials"
-      (make-creds tw-config) => #(-> % type (= twitter.oauth.OauthCredentials)))
+      (make-creds (tw-config)) => #(instance? twitter.oauth.OauthCredentials %))
 
 (defn tw-fetch [oauth-creds]
   (statuses-user-timeline :oauth-creds oauth-creds))
@@ -33,7 +35,7 @@
        (:body tweets)))
 
 (facts "Retreiving and parsing of tweets"
-       (let [tweets (tw-fetch (make-creds tw-config))]
+       (let [tweets (tw-fetch (make-creds (tw-config)))]
          (fact "The response has a status of 200"
                (-> tweets :status :code) => 200)
          (fact "The tweets are in the body of the response as a vector of maps"
@@ -50,6 +52,6 @@
                                       (empty? (difference #{:source :text :time} (-> parsed-tweets first keys set)))))
          (fact "The parsed tweet has :time of type org.joda.time.DateTime"
                (tw-parse tweets) => (fn [parsed-tweets]
-                                      (-> parsed-tweets first :time type (= org.joda.time.DateTime))))))
+                                      (-> parsed-tweets first :time date?)))))
 
-(def srv [tw-config [make-creds tw-fetch tw-parse]])
+(def srv [tw-config make-creds tw-fetch tw-parse])

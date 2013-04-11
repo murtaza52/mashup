@@ -7,7 +7,7 @@
 
 ;; #### Twitter Configuration
 ;; The twitter configuration can be obtained by registering a new
-;; application from the link http://twitter.com/oauth_clients/new.
+;; application at the link http://twitter.com/oauth_clients/new.
 
 ;; (I know this is unwieldly, so it is a todo to find an easier way to
 ;; read tweets, maybe just using the twitter handle etc. )
@@ -46,53 +46,3 @@
              tw-screen-name => string?)
        (fact "github user name exists"
              github-user-name => string?))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

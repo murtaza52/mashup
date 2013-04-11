@@ -1,9 +1,27 @@
+
+
+
 (ns mashup.utils.collection
   (:use [midje.sweet :only [facts fact]]
         [clojure.set :only [map-invert difference]]
         [clojure.algo.generic.functor :only [fmap]]
         [clj-time.core :only [date-time]]))
 
+(defn free-of-type?
+  "Returns a fn that traverses through the coll and applies the pred fn to each element. Returns true if and oly if the pred is false for each element. Also tests on values of embedded hash-maps. "
+  [pred]
+  (fn [coll]
+    (every? (complement pred)
+        (remove coll?
+                (tree-seq coll? #(if (map? %)
+                                   (vals %)
+                                   %)
+                          coll)))))
+
+(fact "Returns a fn which checks for strings"
+      ((free-of-type? string?) [[2012 [{:a 2} {:b 3}]] [2013 [{:a 2} {:b 3}]]]) => true
+      ((free-of-type? string?) [["hello" [{:a 3} {:b 3}]] [2013 [{:a 2} {:b 3}]]]) => false
+      ((free-of-type? string?) [[2111 [{:a "hi"} {:b 3}]] [2013 [{:a 2} {:b 3}]]]) => false)
 
 (defn map-sorter
   "Returns a function for sorted-map, given the comparator function, and andother function for processing the key."

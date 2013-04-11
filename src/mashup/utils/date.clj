@@ -2,7 +2,7 @@
   (:use [clj-time.format :only [unparse parse formatter formatters]]
         [clj-time.core :only [default-time-zone date-midnight date-time year month day hour minute sec milli after?]]
         [midje.sweet :only [facts fact]]
-        [mashup.utils.collection :only [map-sorter map-and-zip apply-and-merge]]
+        [mashup.utils.collection :only [map-sorter map-and-zip apply-and-merge free-of-type?]]
         [clojure.set :only [difference]]))
 
 ;; Predicate fn to test of the given arg is of type org.joda.time.DateTime.
@@ -125,3 +125,11 @@
 (fact "Adds date strings for each dt-type to each map"
       (add-dates [{:a 2 :time (date-time 2011)} {:b 3 :time (date-time 2010)}]) => (fn [s]
                                                                                      (empty? (difference (into #{} dt-types) (set (keys (first s)))))))
+
+(def free-of-dates? (free-of-type? date?))
+
+(fact "Returns true if there are no date instances"
+      (fact "Contains date"
+            (free-of-dates? [["A" [{:a (date-time 2012) :b 3}]]]) => false)
+      (fact "is free of date"
+            (free-of-dates? [["A" [{:a 1 :b 3}]]]) => true))

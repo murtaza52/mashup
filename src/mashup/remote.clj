@@ -9,18 +9,18 @@
         [mashup.core :only [fetch-it! post-process]]
         [midje.sweet :only [facts fact]]
         [clojure.algo.generic.functor :only [fmap]]
-        [mashup.utils.collection :only [dissoc-date-from-seq-of-maps]])
+        [mashup.utils.collection :only [dissoc-date-from-seq-of-maps]]
+        [mashup.utils.date :only [free-of-dates?]])
   (:require [mashup.config :as config]))
 
 
-;; The function below uses the diamond wand (-<>), from the swiss-arrows lib. It has the default behavour of ->, however the threading position can optionally be fdefined using the <> symbol. This is done in the last form.
+;; The function below uses the diamond wand (-<>), from the swiss-arrows lib. It has the default behavour of ->, however the threading position can optionally be specified using the <> symbol. This is done in the last form.
 
 ;; The function below does the following -
-;; 1) Retrieve the data from the services.
-;; 2) Group the data based on the given dt-key.
-;; 3) Remove any date instances from the data (As they cause an error on the client side).
-;; 4) Sort the maps.
-;; 5) Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]
+;; 1. Retrieve the data from external io, or from atom and preprocess it.
+;; 2. Post process the data based on the given date type.
+;; 3. Remove any date instances from the data (As they cause an error on the client side).
+;; 4. Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]
 ;; In each vector the first element represents the date by which it was grouped, while the the second element is a vector of maps. Each map representing the item that was retrieved.
 
 (defremote fetch-data
@@ -32,30 +32,18 @@
    (fmap dissoc-date-from-seq-of-maps) ;; fmap is used as it applies the f each value of the hash-map and preserves the structure.
    (into [])))
 
-;; (facts "Checking the fetched data"
-;;        (let [data (fetch-data :month)]
-;;          (fact "The data structure is a vector"
-;;                data => vector?)
+(facts "Checking the fetched data"
+       (let [data (fetch-data :month)]
+         (fact "The data structure is a vector"
+               data => vector?)
+         (fact "The data structure has no date instances"
+               data => free-of-dates?)))
 
-;;          ;; (fact "The data structure has no date instances"
-;;          ;;       data => (fn [d]
-;;          ;;                 (walk date? #(every? true? %) d)))
-;;          ))
-
-;;(fetch-data)
-;(-> (fetch-data :day) pprint)
-
-;; (facts "Checking the returned data"
-;;        (fact "The data is free of any instance of org.joda.time.DateTime"
-;;              {:ab {:a 2 :b 4}} => (fn [data]
-;;                                       (every? (fn [[k v]] (not= (type v) org.joda.time.DateTime))
-;;                                               (-> data vals first first))))
-;;        (fact "The returned data is grouped"
-;;              (fetch-data :day) => #(-> % keys empty? not)))
+;; Returns the twitter user name as defined in the config file.
 
 (defremote get-twitter-uname
   []
   config/tw-screen-name)
 
-(fact "Returns a string"
-      (get-twitter-uname) => #(-> % type (= java.lang.String)))
+(fact "The return value is a string"
+      (get-twitter-uname) => string?)
