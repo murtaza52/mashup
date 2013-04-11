@@ -16,10 +16,15 @@
 ;; The function below uses the diamond wand (-<>), from the swiss-arrows lib. It has the default behavour of ->, however the threading position can optionally be specified using the <> symbol. This is done in the last form.
 
 ;; The function below does the following -
+
 ;; 1. Retrieve the data from external io, or from atom and preprocess it.
+
 ;; 2. Post process the data based on the given date type.
+
 ;; 3. Remove any date instances from the data (As they cause an error on the client side).
+
 ;; 4. Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]
+
 ;; In each vector the first element represents the date by which it was grouped, while the the second element is a vector of maps. Each map representing the item that was retrieved.
 
 (defremote fetch-data

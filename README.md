@@ -86,6 +86,8 @@ Yes even shiny new porjects have them -
 1. The day button should be pressed when the page loads. Currently
 unable to execute the js needed for this.
 
+2. The cljs repl doesnt work, as webfui replaces the complete body with the generated html, thus also removing the repl callback in the process.
+
 ## License
 
 Copyright © 2013 Murtaza Husain

@@ -8,9 +8,6 @@
   (:require [domina :as dom]))
 
 ;; Calling the utility function to set the repl.
-;; Currently this doesnt work as webfui replaces the complete body and
-;; hence also replaces the repl callback that is included into the body.
-;; Will need to patch the webfui lib for this to work.
 (set-repl)
 
 ;; Fetching the data with the :day provided as the default grouping

@@ -28,14 +28,6 @@
 ;; The function below returns {:data nil}, this will cause the dom to
 ;; display a spinner.
 
-;; (add-mouse-watch :change-grouping [state first-element last-element]
-;;                  (js/alert "Hello"))
-
-;; (when (clicked first-element last-element)
-;;                    (-> (get-attribute first-element :dt-type)
-;;                        (fetch-data))
-;;                    {:data nil})
-
 (defn add-listener
   []
   (add-mouse-watch :change-grouping [state first-element last-element]

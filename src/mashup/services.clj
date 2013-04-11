@@ -3,7 +3,7 @@
   (:use [clojure.pprint :only [pprint]]
         [midje.sweet :only [fact facts]]))
 
-;; ### Services Atom
+;; #### Services Atom
 ;; The atom is a vector of vector. Each inner vector contains n number of func.
 ;; The functions are defined in the sequence of their execution, with the output of the first passed as the input to the second.
 
