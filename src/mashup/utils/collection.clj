@@ -1,5 +1,8 @@
+;; This ns contains generic functions that are used in the app.
+;;
+;; The purpose of most of these fns is to separate the means of combination and abstraction from the subroutines themselves - (Yes SICP !)
 
-
+;; Many of these abstractions may not be generic enough to be reused, however they still serve a very important purpose as they enable the separation of means of the combination from the subroutine itself. Thus it provides clarity to what the fn's purpose is and makes testing a breeze.
 
 (ns mashup.utils.collection
   (:use [midje.sweet :only [facts fact]]
@@ -35,7 +38,7 @@
 (fact "mapsorter returns a fn which sorts a map based on the given comparator and key fns."
       ((map-sorter < identity) {2 :a 1 :b 3 :c}) => {1 :b 2 :a 3 :c})
 
-(defn map-and-zip
+(defn mapz
   "maps f to each value in the keys collection ks. zips the result, with the key."
   [f ks]
   (fn [& params]
@@ -43,13 +46,10 @@
          (zipmap ks))))
 
 (fact "maps f to the coll and returns the zipped results."
-      ((map-and-zip (fn [[p] k]
-                [p k])
-              [1 2 3])
+      ((mapz (fn [[p] k]
+               [p k])
+             [1 2 3])
        5) => {3 [5 3] 2 [5 2] 1 [5 1]})
-
-;; ### Utility Functions
-;; Functions for grouping, sorting and removing date instances from the data.
 
 (defn group-by-key
   "Given a collection of maps, returns a collection with maps grouped using the value of the supplied key."
@@ -61,55 +61,26 @@
 (fact "Groups the coll of maps by the given key"
       (group-by-key [{:a 1 :b 2} {:a 3 :b 4} {:a 1 :b 5}] :a) => {1 [{:a 1, :b 2} {:a 1, :b 5}], 3 [{:a 3, :b 4}]})
 
-;; #### Date Removal functionality
-
 (defn dissoc-with-pred
-  [f]
+  "Returns a fn which dissoc any kv for which the pred is true."
+  [pred]
   (fn [m]
-    (into {} (filter (complement (fn [[k v]] (f k v))) m))))
+    (into {} (filter (complement (fn [[k v]] (pred k v))) m))))
 
 (fact "returns a map with the keys dissoc where the pred is true"
       (let [greater-than-2 (dissoc-with-pred (fn [k v] (> v 2)))]
         (greater-than-2 {:a 3 :b 1 :c 7 :d 2}) => {:b 1 :d 2}))
 
-;; dissoc any keys with the type of date-time
-(def dissoc-date-time
-  (dissoc-with-pred (fn [_ v] (= org.joda.time.DateTime (type v)))))
+(defn fmerge
+  "applies f to a hash-map and merges the result with the input hash-map. f should return a hash-map. If the input is a coll of hash-maps, then maps over it."
+  [f coll]
+  (if (map? coll)
+    (->> (f coll) (merge coll))
+    (map #(->> (f %) (merge %))
+         coll)))
 
-(fact "dissoc any keys having value of type org.joda.time.DateTime"
-      (dissoc-date-time {:time (date-time 2013) :a 2 :b "hello"}) => #(every? (fn [[k v]] (not= (type v) org.joda.time.DateTime)) %))
-
-;; #### Sorting Functionality
-
-(defn dissoc-from-seq-of-maps
-  [dissoc-map-fn]
-  (fn [s]
-    (mapv dissoc-map-fn s)))
-
-(def dissoc-date-from-seq-of-maps (dissoc-from-seq-of-maps dissoc-date-time))
-
-(dissoc-date-from-seq-of-maps [{:time (date-time 2012) :e 2} {:f 3 :hey-man (date-time 2111)}])
-
-
-(fact "Removes all date-time instances from the following data structure {k [{v}]}"
-      (fmap dissoc-date-from-seq-of-maps {:a [{:time (date-time 2012) :e 2} {:f 3}]
-                    :b [{:time (date-time 2013) :h 5}]}) => (fn [data]
-                                                                     (every? (fn [[k v]] not= (type v) org.joda.time.DateTime)
-                                                                             (-> data vals first first))))
-
-(defn get-val-from-first
-  "Function for extracting the date-time from the value of the given vector of maps."
-  [key s]
-  (-> s first key))
-
-
-(defn apply-and-merge
-  "Applies f to each ahsh-map of the seq s, and then merges both."
-  [f]
-  (fn [s]
-    (map #(-> (f %)
-              (merge %))
-         s)))
-
-(fact "Applies f and returns the merged map."
-      ((apply-and-merge #(->> (:a %) inc (hash-map :a-inc))) [{:a 1 :b 2}]) => [{:a-inc 2 :a 1 :b 2}])
+(facts "applies f and returns the merged map."
+       (fact "works with hash-maps"
+             (fmerge #(->> (:a %) inc (hash-map :a-inc)) {:a 1 :b 2}) => {:a-inc 2 :a 1 :b 2})
+       (fact "works with a coll of hash-maps"
+             (fmerge #(->> (:a %) inc (hash-map :a-inc)) [{:a 1 :b 2} {:a 1 :b 2}]) => [{:a-inc 2 :a 1 :b 2}{:a-inc 2 :a 1 :b 2}]))

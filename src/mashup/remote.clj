@@ -9,8 +9,7 @@
         [mashup.core :only [fetch-it! post-process]]
         [midje.sweet :only [facts fact]]
         [clojure.algo.generic.functor :only [fmap]]
-        [mashup.utils.collection :only [dissoc-date-from-seq-of-maps]]
-        [mashup.utils.date :only [free-of-dates?]])
+        [mashup.utils.date :only [dissoc-date-time free-of-dates?]])
   (:require [mashup.config :as config]))
 
 
@@ -29,7 +28,7 @@
   (->>
    (fetch-it!) ;; fetch the data from external io, and pre process it.
    (post-process dt-key) ;; process the data based on the dt-key
-   (fmap dissoc-date-from-seq-of-maps) ;; fmap is used as it applies the f each value of the hash-map and preserves the structure.
+   (fmap #(mapv dissoc-date-time %)) ;; fmap is used as it applies the fn to each value of the hash-map and preserves the structure.
    (into [])))
 
 (facts "Checking the fetched data"

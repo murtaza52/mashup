@@ -2,14 +2,14 @@
   (:use [clj-time.format :only [unparse parse formatter formatters]]
         [clj-time.core :only [default-time-zone date-midnight date-time year month day hour minute sec milli after?]]
         [midje.sweet :only [facts fact]]
-        [mashup.utils.collection :only [map-sorter map-and-zip apply-and-merge free-of-type?]]
+        [mashup.utils.collection :only [map-sorter mapz fmerge free-of-type? dissoc-with-pred]]
         [clojure.set :only [difference]]))
 
 ;; Predicate fn to test of the given arg is of type org.joda.time.DateTime.
 (defn date?
   "Returns true if the type of the arg is of org.joda.time.DateTime"
   [v]
-  (= (type v) org.joda.time.DateTime))
+  (instance? org.joda.time.DateTime v))
 
 (fact "Returns true if the type of the arg is of org.joda.time.DateTime"
       (date? (date-time 2012 2 3 4)) => true
@@ -86,9 +86,8 @@
        (unparse-date (dt-type custom-formatters))))
 
 (facts "Given a date and type, floor it and return its string represetation."
-       (let [v (floor-and-string [(date-time 2013 12 5 6 12 21)] :month)]
-        (fact "The type of the value is string"
-              (type v) => java.lang.String)))
+       (fact "The type of the value is string"
+             (floor-and-string [(date-time 2013 12 5 6 12 21)] :month) => string?))
 
 (defn date-time-comparator
   "Predicate function for comparing two date-time's"
@@ -115,16 +114,18 @@
 ;; The date types which will be added to each item.
 (def dt-types [:day :month :year])
 
-(def make-date-strings (map-and-zip floor-and-string dt-types))
+(def make-date-strings (mapz floor-and-string dt-types))
 
 (fact "Returns a hash-map with keys for each dt-type"
       (make-date-strings (date-time 2011 2 3 4 5)) => {:year "2011" :month "02-2011" :day "02-03-2011"})
 
-(def add-dates (apply-and-merge #(make-date-strings (:time %))))
+(def add-dates (partial fmerge #(make-date-strings (:time %))))
 
 (fact "Adds date strings for each dt-type to each map"
       (add-dates [{:a 2 :time (date-time 2011)} {:b 3 :time (date-time 2010)}]) => (fn [s]
                                                                                      (empty? (difference (into #{} dt-types) (set (keys (first s)))))))
+
+;; pred function to test if a coll is free of date instances.
 
 (def free-of-dates? (free-of-type? date?))
 
@@ -133,3 +134,10 @@
             (free-of-dates? [["A" [{:a (date-time 2012) :b 3}]]]) => false)
       (fact "is free of date"
             (free-of-dates? [["A" [{:a 1 :b 3}]]]) => true))
+
+;; dissoc any keys with the type of date-time
+(def dissoc-date-time
+  (dissoc-with-pred (fn [_ v] (date? v))))
+
+(fact "dissoc any keys having value of type org.joda.time.DateTime"
+      (dissoc-date-time {:time (date-time 2013) :a 2 :b "hello"}) => free-of-dates?)
