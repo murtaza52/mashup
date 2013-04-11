@@ -3038,7 +3038,11 @@ services.</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><h4>Twitter Configuration</h4>
 
 <p>The twitter configuration can be obtained by registering a new
+<<<<<<< HEAD
 application from the link http://twitter.com/oauth_clients/new.</p>
+=======
+application at the link http://twitter.com/oauth_clients/new.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"></td></tr><tr><td class="docs"><p>(I know this is unwieldly, so it is a todo to find an easier way to
 read tweets, maybe just using the twitter handle etc. )</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Sample (fully functional) twitter configuration is provided here.
@@ -3070,10 +3074,14 @@ be performed on github.</p>
        (fact &quot;twitter screen name exists&quot;
              tw-screen-name =&gt; string?)
        (fact &quot;github user name exists&quot;
+<<<<<<< HEAD
              github-user-name =&gt; string?))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.core" name="mashup.core"><h1 class="project-name">mashup.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>The code in this ns retrieves the data in parallel for both the
 services - github and twitter.
 The data is then processed to include date for each item in three
 formats - day, month and year.</p>
+=======
+             github-user-name =&gt; string?))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.core" name="mashup.core"><h1 class="project-name">mashup.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>This ns contains the code for retrieving the data and then processing it.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.core
   (:use [clj-time.core :only [date-time]]
@@ -3083,6 +3091,7 @@ formats - day, month and year.</p>
         [mashup.utils.collection :only [group-by-key]])
   (:require [mashup.config :as c]
             [mashup.github :as gt]
+<<<<<<< HEAD
             [mashup.twitter :as tw]))</pre></td></tr><tr><td class="docs"><p>The one time processing of the data after it is fetched.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn pre-process
   [coll]
@@ -3095,13 +3104,43 @@ formats - day, month and year.</p>
       date-sorter))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(post-process :year [{:year &quot;2012&quot;} {:year &quot;2010&quot;} {:year &quot;2011&quot;}])</pre></td></tr><tr><td class="docs"><p>Populating the service atom with the twitter and github services.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
+=======
+            [mashup.twitter :as tw]))</pre></td></tr><tr><td class="docs"><p>This function is called exactly once the first time data is retrieved.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Performs the one time processing of the data after it is fetched.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn pre-process
+  [coll]
+  (-&gt; coll
+      add-dates)) ;; adds dates strings for each item.</pre></td></tr><tr><td class="docs"><p>adds dates strings for each item.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;adds dates to each item of the collection&quot;
+      (pre-process [{:a 2 :time (date-time 2011)}]) =&gt; (list {:time (date-time 2011) :a 2,
+                                                              :year &quot;2011&quot;,
+                                                              :month &quot;01-2011&quot;,
+                                                              :day &quot;01-01-2011&quot;}))</pre></td></tr><tr><td class="docs"><p>This function is called each time a new request comes from the client. Data is grouped and sorted using the date key.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>The manipulataion of the data based on the dt-type, everytime it is requested.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn post-process
+  [dt-type coll]
+  (-&gt; coll
+      (group-by-key dt-type) ;; grouping the items using the appropriate date string.
+      date-sorter)) ;; sorting the items based on the date string it was</pre></td></tr><tr><td class="docs"><p>sorting the items based on the date string it was</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Group and sort based on the date key&quot;
+      (post-process :year [{:year &quot;2012&quot;} {:year &quot;2010&quot;} {:year &quot;2011&quot;}]) =&gt; {&quot;2012&quot; [{:year &quot;2012&quot;}],
+                                                                              &quot;2011&quot; [{:year &quot;2011&quot;}],
+                                                                              &quot;2010&quot; [{:year &quot;2010&quot;}]})</pre></td></tr><tr><td class="docs"><h4>Populating the service atom</h4>
+
+<p>The below calls add the twitter and github config and functions to the services atom. The services atom is then processed by the exec-services to retrieve data.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(add-service tw/srv)
 (add-service gt/srv)</pre></td></tr><tr><td class="docs"><h4>Fetch the data</h4>
 
 <p>The data is fetched and stored in an atom. This is to prevent the data being retrieved from the external API's multiple times.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def retrieved-data (atom nil))</pre></td></tr><tr><td class="docs"><p>Retrieves the data if true is provided as param or if the value of the atom is nil.</p>
+<<<<<<< HEAD
 </td><td class="codes"></td></tr><tr><td class="docs">
+=======
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(defn fetch-it!
   ([]
      (fetch-it! false))
@@ -3111,16 +3150,24 @@ formats - day, month and year.</p>
         (exec-services)
         pre-process
         (reset! retrieved-data))
+<<<<<<< HEAD
        @retrieved-data)))</pre></td></tr><tr><td class="docs"><p>(facts "The fetch-it! function sucessfully retrieves data"
        (data ))</p>
 </td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.github" name="mashup.github"><h1 class="project-name">mashup.github</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Github Service</h3>
 
 <p>The below ns implements the service protocol for the github service.</p>
+=======
+       @retrieved-data)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.github" name="mashup.github"><h1 class="project-name">mashup.github</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Github Service</h3>
+
+<p>This ns contains the functions for fetching and parsing the data retrieved from github.
+It also defines the config var for adding to the services atom.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.github
   (:use [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
+<<<<<<< HEAD
         [mashup.utils.date :only [parse-date]])
   (:require [tentacles.events :as ev]
             [clj-time.format :as time]
@@ -3133,6 +3180,27 @@ formats - day, month and year.</p>
   [[user page]]
   (ev/performed-events user {:page page}))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn gt-parse [events]
+=======
+        [mashup.utils.date :only [parse-date date?]])
+  (:require [tentacles.events :as ev]
+            [clj-time.format :as time]
+            [mashup.config :as c]))</pre></td></tr><tr><td class="docs"><p>fn for parsing the date for each github event.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def gt-date (parse-date :date-time-no-ms))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Parsing the date received from github&quot;
+      (gt-date &quot;2013-02-20T17:24:33Z&quot;) =&gt; (date-time 2013 02 20 17 24 33))</pre></td></tr><tr><td class="docs"><p>The github configuration for connecting to its API.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn gt-config
+  []
+  (vector c/github-user-name 1))</pre></td></tr><tr><td class="docs"><p>fn for fetching github events.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Fetches the user's events based on the user-name and page number (used for paginating through the events)</p>
+</td><td class="codes"><pre class="brush: clojure">(defn gt-fetch
+  [[user page]]
+  (ev/performed-events user {:page page}))</pre></td></tr><tr><td class="docs"><p>fn for parsing the events into a uniform structure.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Parses each github event and creates a collection of items.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn gt-parse
+  [events]
+>>>>>>> 6ac253d... docs for gh-pages
   (map (fn [event]
          {:source :github
           :type (:type event)
@@ -3140,7 +3208,11 @@ formats - day, month and year.</p>
           :time (gt-date (:created_at event))})
        events))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(facts &quot;Fetching and parsing of github events&quot;
+<<<<<<< HEAD
        (let [events (gt-fetch gt-config)]
+=======
+       (let [events (gt-fetch (gt-config))]
+>>>>>>> 6ac253d... docs for gh-pages
          (fact &quot;The events fetched are a vector of maps&quot;
                events =&gt; #(and (vector? %) (map? (first %))))
          (fact &quot;Each event has the following keys&quot;
@@ -3152,8 +3224,14 @@ formats - day, month and year.</p>
                                        (= :github (:source (first parsed-events)))
                                        (empty? (difference #{:source :type :repo :time} (-&gt; parsed-events first keys set))))))
          (fact &quot;Each parsed event has a time of type org.joda.time.DateTime&quot;
+<<<<<<< HEAD
                (-&gt; (gt-parse events) first) =&gt; #(-&gt; % :time type (= org.joda.time.DateTime)))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def srv [gt-config [gt-fetch gt-parse]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.handler" name="mashup.handler"><h1 class="project-name">mashup.handler</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Ring Handlers</h3>
+=======
+               (-&gt; (gt-parse events) first) =&gt; #(-&gt; % :time date?))))</pre></td></tr><tr><td class="docs"><p>The config vector that will be used by the exec-services fn.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def srv [gt-config gt-fetch gt-parse])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.handler" name="mashup.handler"><h1 class="project-name">mashup.handler</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Ring Handlers</h3>
+>>>>>>> 6ac253d... docs for gh-pages
 
 <p>This ns defines the ring handlers.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
@@ -3165,6 +3243,7 @@ formats - day, month and year.</p>
         [mashup.utils.request :only [mock-req]])
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
+<<<<<<< HEAD
             [shoreleave.middleware.rpc :as rpc]))</pre></td></tr><tr><td class="docs"><p>The index page is an .html file in the file system that is served
 using ring's file-response. The :root option is provided to specify
 the root directory.</p>
@@ -3184,12 +3263,27 @@ displays the body of the index page that was sent over.
 At this point the webfui framework replaced the body with the
 generated output.
 3) Data Fetched - The data requested from the remote api arrives,
+=======
+            [shoreleave.middleware.rpc :as rpc]))</pre></td></tr><tr><td class="docs"><p>In the current scheme the page is rendered three times -
+1. Page Request - The initial display when the page is first requested. This
+displays the body of the index page that was sent over.
+2. JS Load - The client side javascript has loaded and has executed.
+At this point the webfui framework replaced the body with the
+generated output.
+3. Data Fetched - The data requested from the remote api arrives,
+>>>>>>> 6ac253d... docs for gh-pages
 which causes a rerendering of the DOM.</p>
 
 <p>The displays in the 1 and 2 are similar, thus the user does not
 precieve the refresh.</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>The body of the index page has the initial content and spinner that
 will be displayed when the user request's the page.</p>
+<<<<<<< HEAD
+=======
+</td><td class="codes"></td></tr><tr><td class="docs"><p>The index page is an .html file in the file system that is served
+using ring's file-response. The :root option is provided to specify
+the root directory.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Serves the index page from the file system.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn index
   []
@@ -3198,8 +3292,13 @@ will be displayed when the user request's the page.</p>
   (GET &quot;/&quot; [] (index))
   (route/resources &quot;/&quot;))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def app (-&gt; app-routes
+<<<<<<< HEAD
              (rpc/wrap-rpc &quot;/_shoreleave&quot;)
              handler/site))</pre></td></tr><tr><td class="docs">
+=======
+             (rpc/wrap-rpc &quot;/_shoreleave&quot;) ;; wrapping the routes with the shoreleave handler. Any requests to the _shoreleave url will be handled by the handler
+             handler/site))</pre></td></tr><tr><td class="docs"><p>Mock request fn for testing.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(def req (mock-req app))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(facts &quot;Checking Routes&quot;
        (fact &quot;Compojure Routes : Index Page&quot;
@@ -3222,6 +3321,7 @@ them at the _shoreleave url.</p>
         [mashup.core :only [fetch-it! post-process]]
         [midje.sweet :only [facts fact]]
         [clojure.algo.generic.functor :only [fmap]]
+<<<<<<< HEAD
         [mashup.utils.collection :only [dissoc-date-from-seq-of-maps]])
   (:require [mashup.config :as config]))</pre></td></tr><tr><td class="docs"><p>The function below uses the diamond wand (-&lt;>), from the swiss-arrows lib. It has the default behavour of ->, however the threading position can optionally be fdefined using the &lt;> symbol. This is done in the last form.</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>The function below does the following -
@@ -3230,6 +3330,15 @@ them at the _shoreleave url.</p>
 3) Remove any date instances from the data (As they cause an error on the client side).
 4) Sort the maps.
 5) Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]
+=======
+        [mashup.utils.date :only [dissoc-date-time free-of-dates?]])
+  (:require [mashup.config :as config]))</pre></td></tr><tr><td class="docs"><p>The function below uses the diamond wand (-&lt;>), from the swiss-arrows lib. It has the default behavour of ->, however the threading position can optionally be specified using the &lt;> symbol. This is done in the last form.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>The function below does the following -
+1. Retrieve the data from external io, or from atom and preprocess it.
+2. Post process the data based on the given date type.
+3. Remove any date instances from the data (As they cause an error on the client side).
+4. Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]
+>>>>>>> 6ac253d... docs for gh-pages
 In each vector the first element represents the date by which it was grouped, while the the second element is a vector of maps. Each map representing the item that was retrieved.</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Returns the data retrieved from services as a vector of vectors.</p>
 </td><td class="codes"><pre class="brush: clojure">(defremote fetch-data
@@ -3237,6 +3346,7 @@ In each vector the first element represents the date by which it was grouped, wh
   (-&gt;&gt;
    (fetch-it!) ;; fetch the data from external io, and pre process it.
    (post-process dt-key) ;; process the data based on the dt-key
+<<<<<<< HEAD
    (fmap dissoc-date-from-seq-of-maps) ;; fmap is used as it applies the f each value of the hash-map and preserves the structure.
    (into [])))</pre></td></tr><tr><td class="docs"><p>(facts "Checking the fetched data"
        (let [data (fetch-data :month)]
@@ -3256,12 +3366,27 @@ In each vector the first element represents the date by which it was grouped, wh
                                               (-> data vals first first))))
        (fact "The returned data is grouped"
              (fetch-data :day) => #(-> % keys empty? not)))</p>
+=======
+   (fmap #(mapv dissoc-date-time %)) ;; fmap is used as it applies the fn to each value of the hash-map and preserves the structure.
+   (into [])))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(facts &quot;Checking the fetched data&quot;
+       (let [data (fetch-data :month)]
+         (fact &quot;The data structure is a vector&quot;
+               data =&gt; vector?)
+         (fact &quot;The data structure has no date instances&quot;
+               data =&gt; free-of-dates?)))</pre></td></tr><tr><td class="docs"><p>Returns the twitter user name as defined in the config file.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defremote get-twitter-uname
   []
   config/tw-screen-name)</pre></td></tr><tr><td class="docs">
+<<<<<<< HEAD
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns a string&quot;
       (get-twitter-uname) =&gt; #(-&gt; % type (= java.lang.String)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.services" name="mashup.services"><h1 class="project-name">mashup.services</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+=======
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;The return value is a string&quot;
+      (get-twitter-uname) =&gt; string?)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.services" name="mashup.services"><h1 class="project-name">mashup.services</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.services
   (:use [clojure.pprint :only [pprint]]
         [midje.sweet :only [fact facts]]))</pre></td></tr><tr><td class="docs"><h3>Services Atom</h3>
@@ -3269,20 +3394,34 @@ In each vector the first element represents the date by which it was grouped, wh
 <p>The atom is a vector of vector. Each inner vector contains n number of func.
 The functions are defined in the sequence of their execution, with the output of the first passed as the input to the second.</p>
 </td><td class="codes"></td></tr><tr><td class="docs">
+<<<<<<< HEAD
 </td><td class="codes"><pre class="brush: clojure">(def services (atom []))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn add-service
   [fns]
   (swap! services conj fns))</pre></td></tr><tr><td class="docs">
+=======
+</td><td class="codes"><pre class="brush: clojure">(def services (atom []))</pre></td></tr><tr><td class="docs"><p>ex usage of the fn (add-service [1 [inc inc inc]])</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>conjs the input coll to the atom vector.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn add-service
+  [coll]
+  (swap! services conj coll))</pre></td></tr><tr><td class="docs"><p>Executes each coll of fns as a future, and concatenates the result.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(defn exec-services
   ([] (exec-services @services))
   ([v]
      (-&gt;&gt;
+<<<<<<< HEAD
       (map (fn [[config fns]]
               (future ((apply comp (reverse fns)) config)))
+=======
+      (map (fn [coll]
+              (future ((apply comp (reverse coll)))))
+>>>>>>> 6ac253d... docs for gh-pages
             v)
       (map deref)
       (apply concat)
       doall))) ;;using doall to force the lazy seq generated by map</pre></td></tr><tr><td class="docs"><p>using doall to force the lazy seq generated by map</p>
+<<<<<<< HEAD
 </td><td class="codes"></td></tr><tr><td class="docs"><p>(facts "C"
       (let [s [[1 [inc]]
                [2 [inc inc]]]]
@@ -3290,12 +3429,20 @@ The functions are defined in the sequence of their execution, with the output of
               (exec-services [[1 [inc]]
                [2 [inc inc]]]) => [2 3])))</p>
 </td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.twitter" name="mashup.twitter"><h1 class="project-name">mashup.twitter</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+=======
+</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.twitter" name="mashup.twitter"><h1 class="project-name">mashup.twitter</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Twitter Service</h3>
+
+<p>This ns contains the functions for fetching and parsing the data retrieved from twitter.
+It also defines the config var for adding to the services atom.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.twitter
   (:use [twitter.oauth :only [make-oauth-creds]]
         [twitter.api.restful :only [statuses-user-timeline]]
         [midje.sweet :only [facts fact anything]]
         [clj-time.core :only [date-time]]
         [clojure.set :only [difference]]
+<<<<<<< HEAD
         [mashup.utils.date :only [parse-date]])
   (:require [oauth.client :as oauth]
             [mashup.config :as c]))</pre></td></tr><tr><td class="docs">
@@ -3311,13 +3458,40 @@ The functions are defined in the sequence of their execution, with the output of
 </td><td class="codes"><pre class="brush: clojure">(defn tw-fetch [oauth-creds]
   (statuses-user-timeline :oauth-creds oauth-creds))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn tw-parse [tweets]
+=======
+        [mashup.utils.date :only [parse-date date?]])
+  (:require [oauth.client :as oauth]
+            [mashup.config :as c]))</pre></td></tr><tr><td class="docs"><p>fn for parsing the date for each tweet.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def tw-date (parse-date &quot;E MMM dd HH:mm:ss Z YYYY&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Able to parse the date received from twitter&quot;
+      (tw-date &quot;Mon Feb 25 02:42:27 +0000 2013&quot;) =&gt; (date-time 2013 02 25 02 42 27))</pre></td></tr><tr><td class="docs"><p>The twitter configuration for connecting to its API.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn tw-config
+  []
+  (vector c/tw-consumer-key c/tw-consumer-secret c/tw-access-token c/tw-access-secret))</pre></td></tr><tr><td class="docs"><p>returns oauth cred that can be used to connect to twitter.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn make-cred
+  [c]
+  (apply make-oauth-creds c))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns an object of type twitter.oauth.OauthCredentials&quot;
+      (make-creds (tw-config)) =&gt; #(instance? twitter.oauth.OauthCredentials %))</pre></td></tr><tr><td class="docs"><p>Fetches tweets of a user given the uath credentials.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn tw-fetch
+  [oauth-creds]
+  (statuses-user-timeline :oauth-creds oauth-creds))</pre></td></tr><tr><td class="docs"><p>Parses the tweets into a collection of maps.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn tw-parse
+  [tweets]
+>>>>>>> 6ac253d... docs for gh-pages
   (map (fn[tweet]
          {:source :twitter
           :text (:text tweet)
           :time (tw-date (:created_at tweet))})
        (:body tweets)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(facts &quot;Retreiving and parsing of tweets&quot;
+<<<<<<< HEAD
        (let [tweets (tw-fetch (make-creds tw-config))]
+=======
+       (let [tweets (tw-fetch (make-creds (tw-config)))]
+>>>>>>> 6ac253d... docs for gh-pages
          (fact &quot;The response has a status of 200&quot;
                (-&gt; tweets :status :code) =&gt; 200)
          (fact &quot;The tweets are in the body of the response as a vector of maps&quot;
@@ -3334,13 +3508,40 @@ The functions are defined in the sequence of their execution, with the output of
                                       (empty? (difference #{:source :text :time} (-&gt; parsed-tweets first keys set)))))
          (fact &quot;The parsed tweet has :time of type org.joda.time.DateTime&quot;
                (tw-parse tweets) =&gt; (fn [parsed-tweets]
+<<<<<<< HEAD
                                       (-&gt; parsed-tweets first :time type (= org.joda.time.DateTime))))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def srv [tw-config [make-creds tw-fetch tw-parse]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.collection" name="mashup.utils.collection"><h1 class="project-name">mashup.utils.collection</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+=======
+                                      (-&gt; parsed-tweets first :time date?)))))</pre></td></tr><tr><td class="docs"><p>The config vector that will be used by the exec-services fn.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def srv [tw-config make-creds tw-fetch tw-parse])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.collection" name="mashup.utils.collection"><h1 class="project-name">mashup.utils.collection</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>This ns contains generic functions that are used in the app.</p>
+
+<p>The purpose of most of these fns is to separate the means of combination and abstraction from the subroutines themselves - (Yes SICP !)</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Many of these abstractions may not be generic enough to be reused, however they still serve a very important purpose as they enable the separation of means of the combination from the subroutine itself. Thus it provides clarity to what the fn's purpose is and makes testing a breeze.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.utils.collection
   (:use [midje.sweet :only [facts fact]]
         [clojure.set :only [map-invert difference]]
         [clojure.algo.generic.functor :only [fmap]]
+<<<<<<< HEAD
         [clj-time.core :only [date-time]]))</pre></td></tr><tr><td class="docs"><p>Returns a function for sorted-map, given the comparator function, and andother function for processing the key.</p>
+=======
+        [clj-time.core :only [date-time]]))</pre></td></tr><tr><td class="docs"><p>Returns a fn that traverses through the coll and applies the pred fn to each element. Returns true if and oly if the pred is false for each element. Also tests on values of embedded hash-maps. </p>
+</td><td class="codes"><pre class="brush: clojure">(defn free-of-type?
+  [pred]
+  (fn [coll]
+    (every? (complement pred)
+        (remove coll?
+                (tree-seq coll? #(if (map? %)
+                                   (vals %)
+                                   %)
+                          coll)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns a fn which checks for strings&quot;
+      ((free-of-type? string?) [[2012 [{:a 2} {:b 3}]] [2013 [{:a 2} {:b 3}]]]) =&gt; true
+      ((free-of-type? string?) [[&quot;hello&quot; [{:a 3} {:b 3}]] [2013 [{:a 2} {:b 3}]]]) =&gt; false
+      ((free-of-type? string?) [[2111 [{:a &quot;hi&quot;} {:b 3}]] [2013 [{:a 2} {:b 3}]]]) =&gt; false)</pre></td></tr><tr><td class="docs"><p>Returns a function for sorted-map, given the comparator function, and andother function for processing the key.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(defn map-sorter
   [cf kf]
   (fn [m]
@@ -3350,12 +3551,17 @@ The functions are defined in the sequence of their execution, with the output of
           m)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;mapsorter returns a fn which sorts a map based on the given comparator and key fns.&quot;
       ((map-sorter &lt; identity) {2 :a 1 :b 3 :c}) =&gt; {1 :b 2 :a 3 :c})</pre></td></tr><tr><td class="docs"><p>maps f to each value in the keys collection ks. zips the result, with the key.</p>
+<<<<<<< HEAD
 </td><td class="codes"><pre class="brush: clojure">(defn map-and-zip
+=======
+</td><td class="codes"><pre class="brush: clojure">(defn mapz
+>>>>>>> 6ac253d... docs for gh-pages
   [f ks]
   (fn [&amp; params]
     (-&gt;&gt; (map #(f params %) ks)
          (zipmap ks))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;maps f to the coll and returns the zipped results.&quot;
+<<<<<<< HEAD
       ((map-and-zip (fn [[p] k]
                 [p k])
               [1 2 3])
@@ -3404,17 +3610,54 @@ The functions are defined in the sequence of their execution, with the output of
          s)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Applies f and returns the merged map.&quot;
       ((apply-and-merge #(-&gt;&gt; (:a %) inc (hash-map :a-inc))) [{:a 1 :b 2}]) =&gt; [{:a-inc 2 :a 1 :b 2}])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.date" name="mashup.utils.date"><h1 class="project-name">mashup.utils.date</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+=======
+      ((mapz (fn [[p] k]
+               [p k])
+             [1 2 3])
+       5) =&gt; {3 [5 3] 2 [5 2] 1 [5 1]})</pre></td></tr><tr><td class="docs"><p>Given a collection of maps, returns a collection with maps grouped using the value of the supplied key.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn group-by-key
+  [coll k]
+  (group-by #(%1 k) coll))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Groups the coll of maps by the given key&quot;
+      (group-by-key [{:a 1 :b 2} {:a 3 :b 4} {:a 1 :b 5}] :a) =&gt; {1 [{:a 1, :b 2} {:a 1, :b 5}], 3 [{:a 3, :b 4}]})</pre></td></tr><tr><td class="docs"><p>Returns a fn which dissoc any kv for which the pred is true.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn dissoc-with-pred
+  [pred]
+  (fn [m]
+    (into {} (filter (complement (fn [[k v]] (pred k v))) m))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;returns a map with the keys dissoc where the pred is true&quot;
+      (let [greater-than-2 (dissoc-with-pred (fn [k v] (&gt; v 2)))]
+        (greater-than-2 {:a 3 :b 1 :c 7 :d 2}) =&gt; {:b 1 :d 2}))</pre></td></tr><tr><td class="docs"><p>applies f to a hash-map and merges the result with the input hash-map. f should return a hash-map. If the input is a coll of hash-maps, then maps over it.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn fmerge
+  [f coll]
+  (if (map? coll)
+    (-&gt;&gt; (f coll) (merge coll))
+    (map #(-&gt;&gt; (f %) (merge %))
+         coll)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(facts &quot;applies f and returns the merged map.&quot;
+       (fact &quot;works with hash-maps&quot;
+             (fmerge #(-&gt;&gt; (:a %) inc (hash-map :a-inc)) {:a 1 :b 2}) =&gt; {:a-inc 2 :a 1 :b 2})
+       (fact &quot;works with a coll of hash-maps&quot;
+             (fmerge #(-&gt;&gt; (:a %) inc (hash-map :a-inc)) [{:a 1 :b 2} {:a 1 :b 2}]) =&gt; [{:a-inc 2 :a 1 :b 2}{:a-inc 2 :a 1 :b 2}]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.date" name="mashup.utils.date"><h1 class="project-name">mashup.utils.date</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.utils.date
   (:use [clj-time.format :only [unparse parse formatter formatters]]
         [clj-time.core :only [default-time-zone date-midnight date-time year month day hour minute sec milli after?]]
         [midje.sweet :only [facts fact]]
+<<<<<<< HEAD
         [mashup.utils.collection :only [map-sorter map-and-zip apply-and-merge]]
+=======
+        [mashup.utils.collection :only [map-sorter mapz fmerge free-of-type? dissoc-with-pred]]
+>>>>>>> 6ac253d... docs for gh-pages
         [clojure.set :only [difference]]))</pre></td></tr><tr><td class="docs"><p>Returns true if the type of the arg is of org.joda.time.DateTime</p>
 
 <p>Predicate fn to test of the given arg is of type org.joda.time.DateTime.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn date?
   [v]
+<<<<<<< HEAD
   (= (type v) org.joda.time.DateTime))</pre></td></tr><tr><td class="docs">
+=======
+  (instance? org.joda.time.DateTime v))</pre></td></tr><tr><td class="docs">
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns true if the type of the arg is of org.joda.time.DateTime&quot;
       (date? (date-time 2012 2 3 4)) =&gt; true
       (date? &quot;2012&quot;) =&gt; false
@@ -3471,23 +3714,36 @@ The functions are defined in the sequence of their execution, with the output of
   (-&gt;&gt; (floor-date dt-type date)
        (unparse-date (dt-type custom-formatters))))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(facts &quot;Given a date and type, floor it and return its string represetation.&quot;
+<<<<<<< HEAD
        (let [v (floor-and-string [(date-time 2013 12 5 6 12 21)] :month)]
         (fact &quot;The type of the value is string&quot;
               (type v) =&gt; java.lang.String)))</pre></td></tr><tr><td class="docs"><p>Predicate function for comparing two date-time's</p>
+=======
+       (fact &quot;The type of the value is string&quot;
+             (floor-and-string [(date-time 2013 12 5 6 12 21)] :month) =&gt; string?))</pre></td></tr><tr><td class="docs"><p>Predicate function for comparing two date-time's</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(defn date-time-comparator
   [time1 time2]
   (after? time1 time2))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns true if the first date is chronologically after the second date.&quot;
       (date-time-comparator (date-time 2013) (date-time 2011)) =&gt; true)</pre></td></tr><tr><td class="docs"><p>clj-time formatter which can be used for specifying formats for all the three date strings.</p>
+<<<<<<< HEAD
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def multi-parser (formatter (default-time-zone) &quot;MM-dd-YYYY&quot; &quot;MM-YYYY&quot; &quot;YYYY&quot;))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(facts &quot;The multi-parse can be used as a formatter to parse dates in day, month and year formats.&quot;
        (fact &quot;It can parse a date in YYYY format&quot;
              (parse multi-parser &quot;2012&quot;) =&gt; date?))</pre></td></tr><tr><td class="docs">
+=======
+</td><td class="codes"><pre class="brush: clojure">(def multi-parser (formatter (default-time-zone) &quot;MM-dd-YYYY&quot; &quot;MM-YYYY&quot; &quot;YYYY&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(facts &quot;The multi-parse can be used as a formatter to parse dates in day, month and year formats.&quot;
+       (fact &quot;It can parse a date in YYYY format&quot;
+             (parse multi-parser &quot;2012&quot;) =&gt; date?))</pre></td></tr><tr><td class="docs"><p>fn for sorting a map based on the string date keys.</p>
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(def date-sorter (map-sorter date-time-comparator #(parse multi-parser %)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Sorts a map in which the keys are date strings.&quot;
       (date-sorter {&quot;2012&quot; 2 &quot;2011&quot; 3 &quot;2013&quot; 1}) =&gt; {&quot;2011&quot; 3 &quot;2012&quot; 2 &quot;2013&quot; 1}
       (date-sorter {&quot;03-2013&quot; 2 &quot;01-2013&quot; 3 &quot;02-2013&quot; 1}) =&gt; {&quot;03-2013&quot; 2 &quot;01-2013&quot; 3 &quot;02-2013&quot; 1})</pre></td></tr><tr><td class="docs"><p>The date types which will be added to each item.</p>
+<<<<<<< HEAD
 </td><td class="codes"><pre class="brush: clojure">(def dt-types [:day :month :year])</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def make-date-strings (map-and-zip floor-and-string dt-types))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns a hash-map with keys for each dt-type&quot;
@@ -3496,6 +3752,27 @@ The functions are defined in the sequence of their execution, with the output of
 </td><td class="codes"><pre class="brush: clojure">(fact &quot;Adds date strings for each dt-type to each map&quot;
       (add-dates [{:a 2 :time (date-time 2011)} {:b 3 :time (date-time 2010)}]) =&gt; (fn [s]
                                                                                      (empty? (difference (into #{} dt-types) (set (keys (first s)))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.request" name="mashup.utils.request"><h1 class="project-name">mashup.utils.request</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+=======
+</td><td class="codes"><pre class="brush: clojure">(def dt-types [:day :month :year])</pre></td></tr><tr><td class="docs"><p>fn for creating floored date strings for each dt type</p>
+</td><td class="codes"><pre class="brush: clojure">(def make-date-strings (mapz floor-and-string dt-types))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns a hash-map with keys for each dt-type&quot;
+      (make-date-strings (date-time 2011 2 3 4 5)) =&gt; {:year &quot;2011&quot; :month &quot;02-2011&quot; :day &quot;02-03-2011&quot;})</pre></td></tr><tr><td class="docs"><p>fn for adding the date strings to a map</p>
+</td><td class="codes"><pre class="brush: clojure">(def add-dates (partial fmerge #(make-date-strings (:time %))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Adds date strings for each dt-type to each map&quot;
+      (add-dates [{:a 2 :time (date-time 2011)} {:b 3 :time (date-time 2010)}]) =&gt; (fn [s]
+                                                                                     (empty? (difference (into #{} dt-types) (set (keys (first s)))))))</pre></td></tr><tr><td class="docs"><p>pred function to test if a coll is free of date instances.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def free-of-dates? (free-of-type? date?))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;Returns true if there are no date instances&quot;
+      (fact &quot;Contains date&quot;
+            (free-of-dates? [[&quot;A&quot; [{:a (date-time 2012) :b 3}]]]) =&gt; false)
+      (fact &quot;is free of date&quot;
+            (free-of-dates? [[&quot;A&quot; [{:a 1 :b 3}]]]) =&gt; true))</pre></td></tr><tr><td class="docs"><p>dissoc any keys with the type of date-time</p>
+</td><td class="codes"><pre class="brush: clojure">(def dissoc-date-time
+  (dissoc-with-pred (fn [_ v] (date? v))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(fact &quot;dissoc any keys having value of type org.joda.time.DateTime&quot;
+      (dissoc-date-time {:time (date-time 2013) :a 2 :b &quot;hello&quot;}) =&gt; free-of-dates?)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.utils.request" name="mashup.utils.request"><h1 class="project-name">mashup.utils.request</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+>>>>>>> 6ac253d... docs for gh-pages
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.utils.request
   (:use [ring.mock.request :only [request]]
         [midje.sweet :only [facts fact]]))</pre></td></tr><tr><td class="docs"><p>Utility function for creating a mock request</p>
