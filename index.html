@@ -3029,234 +3029,7 @@ net.brehaut.ClojureTools = (function (SH) {
   };
 })(SyntaxHighlighter);
 </script><title>mashup -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">mashup</h1><h2 class="project-version">0.1.0</h2><br /><p>Mashup Generator</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.5</td></tr><tr><td class="dep-name">clj-oauth</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.apache.httpcomponents/httpclient</td><td class="dotted"><hr /></td><td class="dep-version">4.2.3</td></tr><tr><td class="dep-name">org.thnetos/cd-client</td><td class="dotted"><hr /></td><td class="dep-version">0.3.4</td></tr><tr><td class="dep-name">ring/ring-core</td><td class="dotted"><hr /></td><td class="dep-version">1.2.0-beta1</td></tr><tr><td class="dep-name">twitter-api</td><td class="dotted"><hr /></td><td class="dep-version">0.7.2</td></tr><tr><td class="dep-name">tentacles</td><td class="dotted"><hr /></td><td class="dep-version">0.2.4</td></tr><tr><td class="dep-name">webfui</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.4</td></tr><tr><td class="dep-name">shoreleave</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-remote-ring</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-remote</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">org.clojure/algo.generic</td><td class="dotted"><hr /></td><td class="dep-version">0.1.1</td></tr><tr><td class="dep-name">domina</td><td class="dotted"><hr /></td><td class="dep-version">1.0.1</td></tr><tr><td class="dep-name">org.clojure/algo.generic</td><td class="dotted"><hr /></td><td class="dep-version">0.1.1</td></tr><tr><td class="dep-name">org.clojure/google-closure-library-third-party</td><td class="dotted"><hr /></td><td class="dep-version">0.0-2029</td></tr><tr><td class="dep-name">swiss-arrows</td><td class="dotted"><hr /></td><td class="dep-version">0.6.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#mashup.cljs.core">mashup.cljs.core</a></li><li><a href="#mashup.cljs.dom">mashup.cljs.dom</a></li><li><a href="#mashup.cljs.listeners">mashup.cljs.listeners</a></li><li><a href="#mashup.cljs.remote">mashup.cljs.remote</a></li><li><a href="#mashup.cljs.state">mashup.cljs.state</a></li><li><a href="#mashup.cljs.utils">mashup.cljs.utils</a></li><li><a href="#mashup.config">mashup.config</a></li><li><a href="#mashup.core">mashup.core</a></li><li><a href="#mashup.github">mashup.github</a></li><li><a href="#mashup.handler">mashup.handler</a></li><li><a href="#mashup.remote">mashup.remote</a></li><li><a href="#mashup.services">mashup.services</a></li><li><a href="#mashup.twitter">mashup.twitter</a></li><li><a href="#mashup.utils.collection">mashup.utils.collection</a></li><li><a href="#mashup.utils.date">mashup.utils.date</a></li><li><a href="#mashup.utils.request">mashup.utils.request</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.core" name="mashup.cljs.core"><h1 class="project-name">mashup.cljs.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.core
-  (:use [webfui.framework :only [launch-app]]
-        [mashup.utils :only [log set-repl]]
-        [mashup.dom :only [render-all]]
-        [mashup.state :only [app-state]]
-        [mashup.remote :only [fetch-data get-twitter-uname]]
-        [mashup.listeners :only [add-listener]])
-  (:require [domina :as dom]))</pre></td></tr><tr><td class="docs"><p>Calling the utility function to set the repl.
-Currently this doesnt work as webfui replaces the complete body and
-hence also replaces the repl callback that is included into the body.
-Will need to patch the webfui lib for this to work.</p>
-</td><td class="codes"><pre class="brush: clojure">(set-repl)</pre></td></tr><tr><td class="docs"><p>Fetching the data with the :day provided as the default grouping
-criteria. Other grouping keys - :month and :year can be provided as needed.</p>
-</td><td class="codes"><pre class="brush: clojure">(fetch-data :day)</pre></td></tr><tr><td class="docs"><p>Fetching the user's screen name for twitter. This is used for display purposes.</p>
-</td><td class="codes"><pre class="brush: clojure">(get-twitter-uname)</pre></td></tr><tr><td class="docs"><p>Webfui's launch-app function takes the state and a render function.
-It passess the state in the render function, generates html from
-the resulting vector (hiccup like dom structure), and replaces the
-body with the generated html.</p>
-
-<p>Webfui also ensures that the state and the dom are in sync. Any
-changes to the state atom are reflected back in the dom.</p>
-</td><td class="codes"><pre class="brush: clojure">(launch-app app-state render-all)</pre></td></tr><tr><td class="docs"><p>calls the javascript function to set the button state.
-(js/setButton)</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Add the listener for mouse clicks, for the Day, Month, Year buttons.</p>
-</td><td class="codes"><pre class="brush: clojure">(add-listener)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.dom" name="mashup.cljs.dom"><h1 class="project-name">mashup.cljs.dom</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>DOM Construction</h3>
-
-<p>This ns contains the different functions used for DOM construction.
-The code in this ns does not have any dependencies and is pure, and can be used
-on both on the server and client.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.dom)</pre></td></tr><tr><td class="docs"><p>The dt-btns is a vector of vectors, used for creating the buttons.
-The first value in the vector is used for the text and id, the second
-is used for setting a custom attribute and the third for setting the
-listener for a mouse event.</p>
-
-<p>The value of the custom attribute is used for storing the param that
-will be passed to the remote function for retrieving data.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def dt-btns
-  (mapv #(vector %1 %2 %3) [&quot;Day&quot; &quot;Month&quot; &quot;Year&quot;] [:day :month :year] (repeat :change-grouping)))</pre></td></tr><tr><td class="docs"><p>Method for creating the toggle buttons. It first creates a div that
-can affixed to the side panel, and then loops over a btns vector to
-create them.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn create-buttons
-  [btns]
-  [:div.btn-group.bs-docs-sidenav.affix.btn-top-margin {:data-toggle &quot;buttons-radio&quot;}
-   (for [[text dt-type mouse] btns]
-     [:button.btn.btn-primary {:type :button :mouse mouse :dt-type dt-type :id text} text])])</pre></td></tr><tr><td class="docs"><p>Spinner that will be displayed when the data is loading.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def spinner [:div.row-fluid
-              [:div.span6.offset4
-               [:img {:src &quot;/img/ajax-loader.gif&quot;}]]])</pre></td></tr><tr><td class="docs"><p>The page heading that will be displayed at the top of the page.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn heading
-  [text]
-  [:div.row-fluid
-   [:div.span12.page-header.title-color
-    [:h1 text]]])</pre></td></tr><tr><td class="docs"><p>The twitter block. It outputs the tweet in a blockquote with
-the author's name.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn twitter-div
-  [item tw-uname]
-  [:div (str &quot;Tweeted on &quot; (item :day))
-   [:blockquote
-    [:p (str (item :text))]
-    [:small tw-uname]]])</pre></td></tr><tr><td class="docs"><p>The github block. It outputs the day the github evet took place, the
-type of event and the repository on which the event took place.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn github-div
-  [item]
-  [:div
-   [:code &quot;Github Activity&quot;]
-   (str &quot; on &quot; (item :day))
-   [:p
-   [:span.muted (item :type)]
-    [:span &quot; in repo &quot;]
-    [:em (str &quot; &quot;  (item :repo))]]])</pre></td></tr><tr><td class="docs"><p>The title for grouping the items by day, month, year.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn dt-title
-  [text]
-  [:div.row-fluid
-   [:div.span12
-    [:h2.title-color text]]])</pre></td></tr><tr><td class="docs"><p>The function for creating the body. This function will also be passed
-to the launch-app macro, and will be called whenever the state
-changes.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Creates the body and takes the state as the input.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn render-all
-  [{:keys [data tw-uname]}]
-  [:div.container-fluid
-   [:div.row-fluid
-    [:div.span2
-     (create-buttons dt-btns)]
-    [:div.span10
-     (heading &quot;Mashup Generator&quot;)
-     (if (nil? data) ;; Spinner will be diaplyed when there is no data.
-       spinner
-       (for [[dt-group items] data]
-         [:div
-          (dt-title dt-group)
-          (for [item items
-                :let [source (item :source)]]
-            [:div.row-fluid
-             [:div.span12
-              (case source
-                :twitter (twitter-div item tw-uname)
-                :github (github-div item))]])]))]]
-   [:script {:type &quot;text/javascript&quot;}
-   &quot;$(document).ready(function(){$('#Day').button('toggle');});&quot;]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.listeners" name="mashup.cljs.listeners"><h1 class="project-name">mashup.cljs.listeners</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.listeners
-  (:use [webfui.utilities :only [get-attribute clicked]]
-        [mashup.remote :only [fetch-data]])
-  (:use-macros [webfui.framework.macros :only [add-mouse-watch]]))</pre></td></tr><tr><td class="docs"><h3>The add-mouse-watch macro</h3>
-
-<p>The below function gets called whenever there is a mouse event for an
-element with the 'mouse' attribute as :change-grouping</p>
-
-<p>The webfui framework passess the first element (element on which the
-mouse down event takes place) and second element (element on which
-the mouse up event takes place).</p>
-
-<p>Also the elements are passed as opposed to events.</p>
-
-<p>In the case where there is a click event as opposed to a drag event,
-the first and second element are same. The clicked macro helps to
-identify this.</p>
-
-<p>The return value of the function is patched with the state atom. Thus
-the user only returns any changes intended for the state, which is
-then reflected back to the DOM due to the bindings.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>The below callback first retrieves the value of the custom attribute
-:dt-type. It then calls the remote api fetch-data. The fetch-data
-function will fetch the data and swap! the value in the state atom.
-The function below returns {:data nil}, this will cause the dom to
-display a spinner.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>(add-mouse-watch :change-grouping [state first-element last-element]
-                 (js/alert "Hello"))</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>(when (clicked first-element last-element)
-                   (-> (get-attribute first-element :dt-type)
-                       (fetch-data))
-                   {:data nil})</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn add-listener
-  []
-  (add-mouse-watch :change-grouping [state first-element last-element]
-                   (when (clicked first-element last-element)
-                     (-&gt; (get-attribute first-element :dt-type)
-                         (fetch-data))
-                     {:data nil})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.remote" name="mashup.cljs.remote"><h1 class="project-name">mashup.cljs.remote</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Remote AJAX calls</h3>
-
-<p>Remote ajax calls are made using shoreleave which builds upon fetch.
-Shoreleave adds additional security to fetch by ensuring that tokens
-are sent in each request to protect against CSRF attacks.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.remote
-  (:use [mashup.utils :only [log]]
-        [mashup.state :only [app-state]])
-  (:require [shoreleave.remotes.http-rpc :as rpc])
-  (:require-macros [shoreleave.remotes.macros :as macros]))</pre></td></tr><tr><td class="docs"><p>The remore-callback macro, takes three parameters the first one being a
-symbol which represnets the name of the remote function (exposed
-using defremote on the server side), a vector of params which the
-rempte function will be called with and an anonymous function which
-is called with the result of the ajax call.</p>
-
-<p>The below function fetches the data retrieved from the github and
-twitter services, based on the date type grouping. The fetched
-data is then set in the state atom.</p>
-
-<p>Ideally the data should be retrieved just once and then the grouping
-should be done on the client side. However in this case the grouping
-depends upon clj-time whose namespaces can not be utilized in cljs.</p>
-
-<p>Thus whenever the user wants to see the data grouped by a different
-date type - day, month or year - a call is made to the server with
-that type</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn fetch-data
-    [dt-type]
-    (rpc/remote-callback :fetch-data [dt-type]
-                         (fn [data]
-                           (log &quot;data-received&quot; data)
-                           (swap! app-state
-                                  (fn
-                                    [{:keys [tw-uname]}]
-                                    {:data data :tw-uname tw-uname})))))</pre></td></tr><tr><td class="docs"><p>The below function fetches the user's twitter sceen name. The result
-is set in the state atom.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn get-twitter-uname
-    []
-    (rpc/remote-callback :get-twitter-uname []
-                         (fn [uname]
-                           (log &quot;name-received&quot; uname)
-                           (swap! app-state
-                                  (fn
-                                    [{:keys [data]}]
-                                    {:data data :tw-uname uname})))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.state" name="mashup.cljs.state"><h1 class="project-name">mashup.cljs.state</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>State Atom</h2>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.state)</pre></td></tr><tr><td class="docs"><p>The atom stores the state of the application. This atom can have
-any arbitrary value. The atom is passed to the rendering function
-which builds the DOM. Any changes in the state causes the rendering
-function to recreate the DOM, and any deltas are rerendered by the
-webfui framework.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def app-state (atom {:data nil :tw-uname nil}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.utils" name="mashup.cljs.utils"><h1 class="project-name">mashup.cljs.utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>CLJS Utilities</h3>
-
-<p>This ns contains utility functions for clojurescript development.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.utils
-  (:require [clojure.browser.repl :as repl]))</pre></td></tr><tr><td class="docs"><p>Atom to store the mode, by default the mode is set to dev.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(def state (atom {:mode :dev}))</pre></td></tr><tr><td class="docs"><p>The log function helps in printing both strings and javascript objects.
-The code was inspired from Chris Ganger's waltz lib.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn log [msg data]
-  &quot;The function takes a msg and data as input. They are appended and printed
-  on the browser's js console&quot;
-  (when (and js/console
-             (= (@state :debug) :dev)
-    (let [d (if (string? data)
-              data
-              (pr-str data))
-          s (str msg &quot; :: &quot; d)]
-      (.log js/console s)))))</pre></td></tr><tr><td class="docs"><p>The repl is only avalaible in the dev mode. This is to pevent errors
-in unsupported browsers such as IE in production.</p>
-</td><td class="codes"></td></tr><tr><td class="docs">
-</td><td class="codes"><pre class="brush: clojure">(defn set-repl []
-  (when (and js/console (= (@state :debug) :dev))
-    (repl/connect &quot;http://localhost:9000/repl&quot;)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.config" name="mashup.config"><h1 class="project-name">mashup.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">compojure</td><td class="dotted"><hr /></td><td class="dep-version">1.1.5</td></tr><tr><td class="dep-name">clj-oauth</td><td class="dotted"><hr /></td><td class="dep-version">1.4.0</td></tr><tr><td class="dep-name">org.apache.httpcomponents/httpclient</td><td class="dotted"><hr /></td><td class="dep-version">4.2.3</td></tr><tr><td class="dep-name">org.thnetos/cd-client</td><td class="dotted"><hr /></td><td class="dep-version">0.3.4</td></tr><tr><td class="dep-name">ring/ring-core</td><td class="dotted"><hr /></td><td class="dep-version">1.2.0-beta1</td></tr><tr><td class="dep-name">twitter-api</td><td class="dotted"><hr /></td><td class="dep-version">0.7.2</td></tr><tr><td class="dep-name">tentacles</td><td class="dotted"><hr /></td><td class="dep-version">0.2.4</td></tr><tr><td class="dep-name">webfui</td><td class="dotted"><hr /></td><td class="dep-version">0.2.1</td></tr><tr><td class="dep-name">clj-time</td><td class="dotted"><hr /></td><td class="dep-version">0.4.4</td></tr><tr><td class="dep-name">shoreleave</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-remote-ring</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">shoreleave/shoreleave-remote</td><td class="dotted"><hr /></td><td class="dep-version">0.3.0</td></tr><tr><td class="dep-name">org.clojure/algo.generic</td><td class="dotted"><hr /></td><td class="dep-version">0.1.1</td></tr><tr><td class="dep-name">domina</td><td class="dotted"><hr /></td><td class="dep-version">1.0.1</td></tr><tr><td class="dep-name">org.clojure/algo.generic</td><td class="dotted"><hr /></td><td class="dep-version">0.1.1</td></tr><tr><td class="dep-name">org.clojure/google-closure-library-third-party</td><td class="dotted"><hr /></td><td class="dep-version">0.0-2029</td></tr><tr><td class="dep-name">swiss-arrows</td><td class="dotted"><hr /></td><td class="dep-version">0.6.0</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#mashup.config">mashup.config</a></li><li><a href="#mashup.core">mashup.core</a></li><li><a href="#mashup.github">mashup.github</a></li><li><a href="#mashup.handler">mashup.handler</a></li><li><a href="#mashup.remote">mashup.remote</a></li><li><a href="#mashup.services">mashup.services</a></li><li><a href="#mashup.cljs.core">mashup.cljs.core</a></li><li><a href="#mashup.cljs.dom">mashup.cljs.dom</a></li><li><a href="#mashup.cljs.listeners">mashup.cljs.listeners</a></li><li><a href="#mashup.cljs.remote">mashup.cljs.remote</a></li><li><a href="#mashup.cljs.state">mashup.cljs.state</a></li><li><a href="#mashup.cljs.utils">mashup.cljs.utils</a></li><li><a href="#mashup.twitter">mashup.twitter</a></li><li><a href="#mashup.utils.collection">mashup.utils.collection</a></li><li><a href="#mashup.utils.date">mashup.utils.date</a></li><li><a href="#mashup.utils.request">mashup.utils.request</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.config" name="mashup.config"><h1 class="project-name">mashup.config</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.config
   (:use [midje.sweet :only [facts fact]]))</pre></td></tr><tr><td class="docs"><h3>Configuration</h3>
 
@@ -3458,12 +3231,20 @@ them at the _shoreleave url.</p>
         [clojure.algo.generic.functor :only [fmap]]
         [mashup.utils.date :only [dissoc-date-time free-of-dates?]])
   (:require [mashup.config :as config]))</pre></td></tr><tr><td class="docs"><p>The function below uses the diamond wand (-&lt;>), from the swiss-arrows lib. It has the default behavour of ->, however the threading position can optionally be specified using the &lt;> symbol. This is done in the last form.</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>The function below does the following -
-1. Retrieve the data from external io, or from atom and preprocess it.
-2. Post process the data based on the given date type.
-3. Remove any date instances from the data (As they cause an error on the client side).
-4. Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]
-In each vector the first element represents the date by which it was grouped, while the the second element is a vector of maps. Each map representing the item that was retrieved.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>The function below does the following -</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><ol>
+<li>Retrieve the data from external io, or from atom and preprocess it.</li>
+</ol>
+</td><td class="codes"></td></tr><tr><td class="docs"><ol>
+<li>Post process the data based on the given date type.</li>
+</ol>
+</td><td class="codes"></td></tr><tr><td class="docs"><ol>
+<li>Remove any date instances from the data (As they cause an error on the client side).</li>
+</ol>
+</td><td class="codes"></td></tr><tr><td class="docs"><ol>
+<li>Convert the data into a vector. The structure of the data is  - [ ["2012" [{:a 2} {:b 3}]] ["2013" [{:a 2} {:b 3}]] ]</li>
+</ol>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>In each vector the first element represents the date by which it was grouped, while the the second element is a vector of maps. Each map representing the item that was retrieved.</p>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Returns the data retrieved from services as a vector of vectors.</p>
 </td><td class="codes"><pre class="brush: clojure">(defremote fetch-data
   [dt-key]
@@ -3486,7 +3267,7 @@ In each vector the first element represents the date by which it was grouped, wh
       (get-twitter-uname) =&gt; string?)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.services" name="mashup.services"><h1 class="project-name">mashup.services</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns mashup.services
   (:use [clojure.pprint :only [pprint]]
-        [midje.sweet :only [fact facts]]))</pre></td></tr><tr><td class="docs"><h3>Services Atom</h3>
+        [midje.sweet :only [fact facts]]))</pre></td></tr><tr><td class="docs"><h4>Services Atom</h4>
 
 <p>The atom is a vector of vector. Each inner vector contains n number of func.
 The functions are defined in the sequence of their execution, with the output of the first passed as the input to the second.</p>
@@ -3506,7 +3287,225 @@ The functions are defined in the sequence of their execution, with the output of
       (map deref)
       (apply concat)
       doall))) ;;using doall to force the lazy seq generated by map</pre></td></tr><tr><td class="docs"><p>using doall to force the lazy seq generated by map</p>
-</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.twitter" name="mashup.twitter"><h1 class="project-name">mashup.twitter</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Twitter Service</h3>
+</td><td class="codes"></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.core" name="mashup.cljs.core"><h1 class="project-name">mashup.cljs.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.core
+  (:use [webfui.framework :only [launch-app]]
+        [mashup.utils :only [log set-repl]]
+        [mashup.dom :only [render-all]]
+        [mashup.state :only [app-state]]
+        [mashup.remote :only [fetch-data get-twitter-uname]]
+        [mashup.listeners :only [add-listener]])
+  (:require [domina :as dom]))</pre></td></tr><tr><td class="docs"><p>Calling the utility function to set the repl.</p>
+</td><td class="codes"><pre class="brush: clojure">(set-repl)</pre></td></tr><tr><td class="docs"><p>Fetching the data with the :day provided as the default grouping
+criteria. Other grouping keys - :month and :year can be provided as needed.</p>
+</td><td class="codes"><pre class="brush: clojure">(fetch-data :day)</pre></td></tr><tr><td class="docs"><p>Fetching the user's screen name for twitter. This is used for display purposes.</p>
+</td><td class="codes"><pre class="brush: clojure">(get-twitter-uname)</pre></td></tr><tr><td class="docs"><p>Webfui's launch-app function takes the state and a render function.
+It passess the state in the render function, generates html from
+the resulting vector (hiccup like dom structure), and replaces the
+body with the generated html.</p>
+
+<p>Webfui also ensures that the state and the dom are in sync. Any
+changes to the state atom are reflected back in the dom.</p>
+</td><td class="codes"><pre class="brush: clojure">(launch-app app-state render-all)</pre></td></tr><tr><td class="docs"><p>calls the javascript function to set the button state.
+(js/setButton)</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Add the listener for mouse clicks, for the Day, Month, Year buttons.</p>
+</td><td class="codes"><pre class="brush: clojure">(add-listener)</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.dom" name="mashup.cljs.dom"><h1 class="project-name">mashup.cljs.dom</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>DOM Construction</h3>
+
+<p>This ns contains the different functions used for DOM construction.
+The code in this ns does not have any dependencies and is pure, and can be used
+on both on the server and client.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.dom)</pre></td></tr><tr><td class="docs"><p>The dt-btns is a vector of vectors, used for creating the buttons.
+The first value in the vector is used for the text and id, the second
+is used for setting a custom attribute and the third for setting the
+listener for a mouse event.</p>
+
+<p>The value of the custom attribute is used for storing the param that
+will be passed to the remote function for retrieving data.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def dt-btns
+  (mapv #(vector %1 %2 %3) [&quot;Day&quot; &quot;Month&quot; &quot;Year&quot;] [:day :month :year] (repeat :change-grouping)))</pre></td></tr><tr><td class="docs"><p>Method for creating the toggle buttons. It first creates a div that
+can affixed to the side panel, and then loops over a btns vector to
+create them.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn create-buttons
+  [btns]
+  [:div.btn-group.bs-docs-sidenav.affix.btn-top-margin {:data-toggle &quot;buttons-radio&quot;}
+   (for [[text dt-type mouse] btns]
+     [:button.btn.btn-primary {:type :button :mouse mouse :dt-type dt-type :id text} text])])</pre></td></tr><tr><td class="docs"><p>Spinner that will be displayed when the data is loading.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def spinner [:div.row-fluid
+              [:div.span6.offset4
+               [:img {:src &quot;/img/ajax-loader.gif&quot;}]]])</pre></td></tr><tr><td class="docs"><p>The page heading that will be displayed at the top of the page.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn heading
+  [text]
+  [:div.row-fluid
+   [:div.span12.page-header.title-color
+    [:h1 text]]])</pre></td></tr><tr><td class="docs"><p>The twitter block. It outputs the tweet in a blockquote with
+the author's name.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn twitter-div
+  [item tw-uname]
+  [:div (str &quot;Tweeted on &quot; (item :day))
+   [:blockquote
+    [:p (str (item :text))]
+    [:small tw-uname]]])</pre></td></tr><tr><td class="docs"><p>The github block. It outputs the day the github evet took place, the
+type of event and the repository on which the event took place.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn github-div
+  [item]
+  [:div
+   [:code &quot;Github Activity&quot;]
+   (str &quot; on &quot; (item :day))
+   [:p
+   [:span.muted (item :type)]
+    [:span &quot; in repo &quot;]
+    [:em (str &quot; &quot;  (item :repo))]]])</pre></td></tr><tr><td class="docs"><p>The title for grouping the items by day, month, year.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn dt-title
+  [text]
+  [:div.row-fluid
+   [:div.span12
+    [:h2.title-color text]]])</pre></td></tr><tr><td class="docs"><p>The function for creating the body. This function will also be passed
+to the launch-app macro, and will be called whenever the state
+changes.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Creates the body and takes the state as the input.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn render-all
+  [{:keys [data tw-uname]}]
+  [:div.container-fluid
+   [:div.row-fluid
+    [:div.span2
+     (create-buttons dt-btns)]
+    [:div.span10
+     (heading &quot;Mashup Generator&quot;)
+     (if (nil? data) ;; Spinner will be diaplyed when there is no data.
+       spinner
+       (for [[dt-group items] data]
+         [:div
+          (dt-title dt-group)
+          (for [item items
+                :let [source (item :source)]]
+            [:div.row-fluid
+             [:div.span12
+              (case source
+                :twitter (twitter-div item tw-uname)
+                :github (github-div item))]])]))]]
+   [:script {:type &quot;text/javascript&quot;}
+   &quot;$(document).ready(function(){$('#Day').button('toggle');});&quot;]])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.listeners" name="mashup.cljs.listeners"><h1 class="project-name">mashup.cljs.listeners</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.listeners
+  (:use [webfui.utilities :only [get-attribute clicked]]
+        [mashup.remote :only [fetch-data]])
+  (:use-macros [webfui.framework.macros :only [add-mouse-watch]]))</pre></td></tr><tr><td class="docs"><h3>The add-mouse-watch macro</h3>
+
+<p>The below function gets called whenever there is a mouse event for an
+element with the 'mouse' attribute as :change-grouping</p>
+
+<p>The webfui framework passess the first element (element on which the
+mouse down event takes place) and second element (element on which
+the mouse up event takes place).</p>
+
+<p>Also the elements are passed as opposed to events.</p>
+
+<p>In the case where there is a click event as opposed to a drag event,
+the first and second element are same. The clicked macro helps to
+identify this.</p>
+
+<p>The return value of the function is patched with the state atom. Thus
+the user only returns any changes intended for the state, which is
+then reflected back to the DOM due to the bindings.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>The below callback first retrieves the value of the custom attribute
+:dt-type. It then calls the remote api fetch-data. The fetch-data
+function will fetch the data and swap! the value in the state atom.
+The function below returns {:data nil}, this will cause the dom to
+display a spinner.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-listener
+  []
+  (add-mouse-watch :change-grouping [state first-element last-element]
+                   (when (clicked first-element last-element)
+                     (-&gt; (get-attribute first-element :dt-type)
+                         (fetch-data))
+                     {:data nil})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.remote" name="mashup.cljs.remote"><h1 class="project-name">mashup.cljs.remote</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Remote AJAX calls</h3>
+
+<p>Remote ajax calls are made using shoreleave which builds upon fetch.
+Shoreleave adds additional security to fetch by ensuring that tokens
+are sent in each request to protect against CSRF attacks.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.remote
+  (:use [mashup.utils :only [log]]
+        [mashup.state :only [app-state]])
+  (:require [shoreleave.remotes.http-rpc :as rpc])
+  (:require-macros [shoreleave.remotes.macros :as macros]))</pre></td></tr><tr><td class="docs"><p>The remore-callback macro, takes three parameters the first one being a
+symbol which represnets the name of the remote function (exposed
+using defremote on the server side), a vector of params which the
+rempte function will be called with and an anonymous function which
+is called with the result of the ajax call.</p>
+
+<p>The below function fetches the data retrieved from the github and
+twitter services, based on the date type grouping. The fetched
+data is then set in the state atom.</p>
+
+<p>Ideally the data should be retrieved just once and then the grouping
+should be done on the client side. However in this case the grouping
+depends upon clj-time whose namespaces can not be utilized in cljs.</p>
+
+<p>Thus whenever the user wants to see the data grouped by a different
+date type - day, month or year - a call is made to the server with
+that type</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn fetch-data
+    [dt-type]
+    (rpc/remote-callback :fetch-data [dt-type]
+                         (fn [data]
+                           (log &quot;data-received&quot; data)
+                           (swap! app-state
+                                  (fn
+                                    [{:keys [tw-uname]}]
+                                    {:data data :tw-uname tw-uname})))))</pre></td></tr><tr><td class="docs"><p>The below function fetches the user's twitter sceen name. The result
+is set in the state atom.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-twitter-uname
+    []
+    (rpc/remote-callback :get-twitter-uname []
+                         (fn [uname]
+                           (log &quot;name-received&quot; uname)
+                           (swap! app-state
+                                  (fn
+                                    [{:keys [data]}]
+                                    {:data data :tw-uname uname})))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.state" name="mashup.cljs.state"><h1 class="project-name">mashup.cljs.state</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>State Atom</h2>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.state)</pre></td></tr><tr><td class="docs"><p>The atom stores the state of the application. This atom can have
+any arbitrary value. The atom is passed to the rendering function
+which builds the DOM. Any changes in the state causes the rendering
+function to recreate the DOM, and any deltas are rerendered by the
+webfui framework.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def app-state (atom {:data nil :tw-uname nil}))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.cljs.utils" name="mashup.cljs.utils"><h1 class="project-name">mashup.cljs.utils</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>CLJS Utilities</h3>
+
+<p>This ns contains utility functions for clojurescript development.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns mashup.cljs.utils
+  (:require [clojure.browser.repl :as repl]))</pre></td></tr><tr><td class="docs"><p>Atom to store the mode, by default the mode is set to dev.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def state (atom {:mode :dev}))</pre></td></tr><tr><td class="docs"><p>The log function helps in printing both strings and javascript objects.
+The code was inspired from Chris Ganger's waltz lib.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn log [msg data]
+  &quot;The function takes a msg and data as input. They are appended and printed
+  on the browser's js console&quot;
+  (when (and js/console
+             (= (@state :debug) :dev)
+    (let [d (if (string? data)
+              data
+              (pr-str data))
+          s (str msg &quot; :: &quot; d)]
+      (.log js/console s)))))</pre></td></tr><tr><td class="docs"><p>The repl is only avalaible in the dev mode. This is to pevent errors
+in unsupported browsers such as IE in production.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn set-repl []
+  (when (and js/console (= (@state :debug) :dev))
+    (repl/connect &quot;http://localhost:9000/repl&quot;)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#mashup.twitter" name="mashup.twitter"><h1 class="project-name">mashup.twitter</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h3>Twitter Service</h3>
 
 <p>This ns contains the functions for fetching and parsing the data retrieved from twitter.
 It also defines the config var for adding to the services atom.</p>
