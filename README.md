@@ -79,7 +79,7 @@ Open Source Rocks and Clojure Rocks Open Source !!!
 I did ask a lot of questions on stackoverflow, and am thankful to the
 numerous authors who shared their knowledge with me ! A lot of code, patterns and revisions would not have been possible without their help.
 
-[http://stackoverflow.com/users/1345376/murtaza52?tab=questions] The questions that have been asked can be [checked here].
+You can check out my questions [over here] (http://stackoverflow.com/users/1345376/murtaza52?tab=questions).
 
 ## Known Bugs
 
