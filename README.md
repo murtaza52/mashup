@@ -24,13 +24,15 @@ To run the application, please do the following -
 
 ## Configuration
 
-The configuration options can be specified in the config.clj
+The configuration options are specified in the `config.clj`
 
 The sample configuration provided with the application is enough to run
-it out of the box.
+the app out of the box.
 
-To undersatnd more about the application please visit the config.clj
-section in the documentation.
+There are two set of config values that need to be specified. The first one being the oauth credentials for twitter and the second the user name for github. Both of these values are specified in the included config.cl.j
+
+To undersatnd more about the configuration options please visit the config.clj
+section in the [http://murtaza52.github.io/mashup/#mashup.config] [documentation].
 
 ## Documentation
 
