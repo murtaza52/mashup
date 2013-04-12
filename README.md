@@ -31,8 +31,8 @@ the app out of the box.
 
 There are two set of config values that need to be specified. The first one being the oauth credentials for twitter and the second the user name for github. Both of these values are specified in the included config.cl.j
 
-To undersatnd more about the configuration options please visit the config.clj
-section in the [http://murtaza52.github.io/mashup/#mashup.config] [documentation].
+To undersatnd more about the configuration options please visit the [config.clj
+section in the documentation] (http://murtaza52.github.io/mashup/#mashup.config).
 
 ## Documentation
 
