@@ -25,7 +25,7 @@
   []
   (vector c/tw-consumer-key c/tw-consumer-secret c/tw-access-token c/tw-access-secret))
 
-(defn make-cred
+(defn make-creds
   "returns oauth cred that can be used to connect to twitter."
   [c]
   (apply make-oauth-creds c))
